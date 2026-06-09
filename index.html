@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Murdoco — Recordatorio de Sebastian Antonio Bobadilla Rivas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <!-- Google Identity Services (nueva API) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+  <!-- Audio Unlock Button (Gesture Interaction) -->
+  <div id="audio-unlock-banner" style="
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(192, 57, 43, 0.9);
+    color: #f5f0e8;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(192, 57, 43, 0.5);
+    animation: slideIn 0.5s ease-out;
+    transition: all 0.3s ease;
+  ">
+    <span style="font-size: 1.2rem; margin-right: 0.5rem;">🎧</span>
+    <strong>Activar música</strong>
+  </div>
+
+  <style>
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    #audio-unlock-banner:hover {
+      background: rgba(192, 57, 43, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    #audio-unlock-banner.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(150px);
+    }
+  </style>
+
+  <!-- SECCIÓN 1: GALERÍA -->
+  <section id="gallery-section">
+    <div class="gallery-overlay"></div>
+    <div class="gallery-container">
+      <img id="gallery-img" src="assets/images/placeholder.jpg" alt="Galería" />
+      <div class="gallery-caption">
+        <span id="gallery-title">Murdoco</span>
+        <span id="gallery-counter">1 / 1</span>
+      </div>
+    </div>
+    <div class="gallery-nav">
+      <button id="prev-img" aria-label="Anterior">&#8592;</button>
+      <button id="pause-img" aria-label="Pausa">&#10074;&#10074;</button>
+      <button id="next-img" aria-label="Siguiente">&#8594;</button>
+    </div>
+    <a class="scroll-hint" href="#music-section">&#8595;</a>
+  </section>
+
+  <!-- SECCIÓN 2: MÚSICA -->
+  <section id="music-section">
+    <div class="music-wrapper">
+      <h2 class="section-eyebrow">Banda Sonora</h2>
+      <p class="section-sub">Playlist especial para Murdoco</p>
+
+      <!-- YouTube Music Embed -->
+      <div id="youtube-player-container" style="width: 100%; max-width: 600px; margin: 2rem auto;">
+        <iframe
+          id="yt-player-iframe"
+          style="border-radius: 12px; width: 100%; height: 500px; border: none;"
+          src="https://www.youtube.com/embed/videoseries?list=PLePtecfNCaDBzbDa6qQAhm_zXbblN6YTZ&autoplay=1&mute=1&enablejsapi=1"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen="" loading="lazy">
+        </iframe>
+      </div>
+    </div>
+    <a class="scroll-hint" href="#notebook-section">&#8595;</a>
+  </section>
+
+  <!-- SECCIÓN 3: CUADERNO -->
+  <section id="notebook-section">
+    <h2 class="section-eyebrow">Mi Cuaderno</h2>
+    <p class="section-sub">Contenido sincronizado desde Google Docs</p>
+    <div id="notebook-wrapper">
+      <div id="notebook-controls">
+        <button id="btn-prev-page">&#9664; Anterior</button>
+        <span id="page-indicator">Página 1</span>
+        <button id="btn-next-page">Siguiente &#9654;</button>
+      </div>
+      <div id="book-container">
+        <div id="book"></div>
+      </div>
+      <div id="sync-status">
+        <span id="sync-icon">&#9702;</span>
+        <span id="sync-text">Sin sincronizar</span>
+        <button id="btn-refresh-doc">&#8635; Actualizar</button>
+      </div>
+    </div>
+  </section>
+
+  <footer id="site-footer">
+    <p>Recordatorio de ♥ para Sebastian Antonio Bobadilla Rivas (Murdoco) · <a href="https://github.com/JuanB" target="_blank" rel="noopener">GitHub</a></p>
+  </footer>
+
+  <!-- Configuración (debe cargarse primero) -->
+  <script src="config.js"></script>
+
+  <!-- Scripts principales -->
+  <script src="assets/js/auth-gis.js"></script>
+  <script src="assets/js/gallery-gphoto.js"></script>
+  <script src="assets/js/youtube-autoplay.js"></script>
+  <!-- <script src="assets/js/player.js"></script> Desactivado: usando YouTube embed directo -->
+  <script src="assets/js/notebook.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Node (si es que usas)
+node_modules/
+npm-debug.log
+
+# Archivos de sistema
+.env
+.env.local
+
+# Temporales
+*.tmp
+*.log
