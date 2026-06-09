@@ -7,8 +7,8 @@ const config = {
   // GOOGLE DRIVE — Carga automática de fotos ⭐ RECOMENDADO
   // ─────────────────────────────────────────────────────────────────
 
-  // Client ID: Obtener en Google Cloud Console
-  googleClientId: '1025849624010-tj5rab76k1663n4mpds7i0l5cndbrujb.apps.googleusercontent.com',
+  // API Key: Obtener en Google Cloud Console (sin necesidad de OAuth)
+  googleApiKey: 'AIzaSyA7HIrqbLmGxeoDmoZ45zf73dWO9xQcp-g',
 
   // Carpeta ID de Google Drive
   // Obtén el ID del link: https://drive.google.com/drive/folders/FOLDER_ID

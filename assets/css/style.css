@@ -44,19 +44,25 @@ body { font-family: var(--font-body); background: var(--ink); color: var(--paper
 #gallery-section {
   position: relative; width: 100%; height: 100vh;
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; background: linear-gradient(135deg, #1a1410 0%, #2a2018 100%);
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1410 0%, #2a2018 100%);
+  background-image: url('../../assets/images/ChatGPT Image 9 jun 2026, 19_16_59.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 .gallery-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(26,20,16,0.85) 100%);
-  z-index: 1;
+  background: rgba(26,20,16,0.4);
+  z-index: 0;
 }
 .gallery-container {
   position: relative; width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
+  z-index: 2;
 }
 #gallery-img {
-  width: 100%; height: 100%; object-fit: cover;
+  width: 100%; height: 100%; object-fit: contain;
   transition: opacity 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

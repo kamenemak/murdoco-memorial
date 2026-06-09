@@ -53,6 +53,7 @@ const GALLERY_GPHOTO = (() => {
   async function loadPhotosFromAlbum() {
     try {
       const folderId = config.googleDriveFolderId;
+      const apiKey = config.googleApiKey;
 
       if (!folderId || folderId === 'TU_GOOGLE_DRIVE_FOLDER_ID') {
         log('⚠️ googleDriveFolderId no configurado en config.js');
@@ -60,29 +61,13 @@ const GALLERY_GPHOTO = (() => {
         return;
       }
 
-      log(`📸 Cargando fotos de Google Drive: ${folderId}`);
-
-      // Usar la API de Google Photos
-      let token = localStorage.getItem('murdoco_gdrive_token');
-
-      if (!token) {
-        log('⏳ Sin token, esperando autorización...');
-        // Esperar a que se obtenga el token
-        for (let i = 0; i < 30; i++) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          token = localStorage.getItem('murdoco_gdrive_token');
-          if (token) {
-            log('✓ Token obtenido');
-            break;
-          }
-        }
-
-        if (!token) {
-          log('⚠️ Sin token después de esperar. Necesitas autorizar Google primero');
-          showError('Necesitas autorizar Google primero');
-          return;
-        }
+      if (!apiKey) {
+        log('⚠️ googleApiKey no configurado en config.js');
+        showError('Configura tu API Key de Google en config.js');
+        return;
       }
+
+      log(`📸 Cargando fotos de Google Drive: ${folderId}`);
 
       // Google Drive API - Query correcta
       const query = `mimeType contains 'image/' and '${folderId}' in parents and trashed=false`;
@@ -90,12 +75,7 @@ const GALLERY_GPHOTO = (() => {
       log(`🔍 Buscando imágenes con query: ${query.substring(0, 50)}...`);
 
       const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&pageSize=100&fields=files(id,name,thumbnailLink,mimeType)&orderBy=modifiedTime%20desc`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }
+        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&pageSize=100&fields=files(id,name,thumbnailLink,mimeType)&orderBy=modifiedTime%20desc&key=${apiKey}`
       );
 
       if (!response.ok) {
@@ -253,51 +233,14 @@ const GALLERY_GPHOTO = (() => {
   // INIT
   // ────────────────────────────────────────────────────────
 
-  function showAuthButton() {
-    const section = document.getElementById('gallery-section');
-    const button = document.createElement('button');
-    button.textContent = '🔐 Autorizar Google Fotos';
-    button.style.cssText = `
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 1rem 2rem;
-      background: var(--rust);
-      color: white;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-size: 1rem;
-      z-index: 100;
-      font-weight: 600;
-    `;
-    button.onmouseover = () => button.style.opacity = '0.8';
-    button.onmouseout = () => button.style.opacity = '1';
-
-    button.onclick = async () => {
-      log('🔐 Abriendo autorización de Google...');
-      // Abrir ventana de login de Google
-      window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${config.googleClientId}&redirect_uri=${encodeURIComponent(window.location.origin + window.location.pathname)}&response_type=code&scope=https://www.googleapis.com/auth/photoslibrary.readonly`;
-    };
-
-    section.appendChild(button);
-    log('✓ Botón de autorización mostrado');
-  }
-
   function init() {
     if (!galleryImg) return;
 
-    log('🚀 Inicializando GALLERY_GPHOTO...');
+    log('🚀 Inicializando GALLERY_GPHOTO con API Key...');
+    log('📌 Sin necesidad de autorización OAuth');
 
-    // Verificar si hay un token válido
-    const token = localStorage.getItem('murdoco_gdrive_token');
-    if (token) {
-      loadPhotosFromAlbum();
-    } else {
-      log('⚠️ Sin token de autorización');
-      showAuthButton();
-    }
+    // Cargar fotos automáticamente con API Key
+    loadPhotosFromAlbum();
   }
 
   return { init };
