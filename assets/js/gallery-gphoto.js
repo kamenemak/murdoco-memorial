@@ -94,12 +94,10 @@ const GALLERY_GPHOTO = (() => {
       }
 
       // Convertir a formato de galería
-      // Usar thumbnailLink y reemplazar el tamaño por =s0 para resolución original
+      // Usar Google Drive API v3 con alt=media para API Key pública
       images = files.map((file, idx) => {
-        let imageUrl = file.thumbnailLink || `https://drive.google.com/uc?export=view&id=${file.id}`;
-
-        // Reemplazar tamaño de miniatura por resolución original
-        imageUrl = imageUrl.replace(/=s\d+$/, '=s0');
+        // URL oficial de Google Drive API v3 que funciona con API Key
+        const imageUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${config.googleApiKey}`;
 
         return {
           id: file.id,
