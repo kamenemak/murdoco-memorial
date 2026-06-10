@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const h1 = heroText.querySelector('h1');
       if (h1) {
-        h1.style.opacity = Math.min(1, progress * 2);
+        h1.style.opacity = Math.min(1, Math.max(0, progress * 1.2 - 0.3));
       }
 
       const p = heroText.querySelector('p');

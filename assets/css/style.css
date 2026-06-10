@@ -617,6 +617,15 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   }
 }
 
+@keyframes fadeOutName {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 .hero-text .hero-name {
   font-size: 1rem;
   color: rgba(245, 240, 232, 0.8);
@@ -627,7 +636,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   will-change: opacity;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  animation: fadeInName 0.8s ease-out 0.2s forwards;
+  animation: fadeInName 0.6s ease-out 0.1s forwards;
   opacity: 0;
 }
 
@@ -642,7 +651,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   will-change: opacity;
   text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  animation: fadeInDates 0.8s ease-out 0.5s forwards;
+  animation: fadeInDates 0.6s ease-out 0.3s forwards;
   opacity: 0;
 }
 
