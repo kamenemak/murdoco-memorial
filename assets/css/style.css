@@ -401,7 +401,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   }
 
   .cloud-front-3 {
-    bottom: -29%;
+    bottom: -37%;
   }
   .cloud-front-3-mirror {
     bottom: -43%;
@@ -467,7 +467,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   .cloud-front-3 {
     width: clamp(240px, 208vw, 2173px);
     height: clamp(192px, 115vh, 1440px);
-    left: -53%;
+    left: -26%;
   }
   .cloud-front-3-mirror {
     width: clamp(240px, 208vw, 2173px);
@@ -478,40 +478,62 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 /* Responsive en pantallas muy pequeñas */
 @media (max-width: 480px) {
+  .cloud-back-1 {
+    top: 3%;
+    left: 75%;
+    opacity: 0.55;
+  }
+  .cloud-back-1-mirror {
+    top: 3%;
+    right: 61%;
+    opacity: 0.55;
+  }
+  .cloud-back-2-mirror {
+    top: 18%;
+    left: 68%;
+    opacity: 0.50;
+  }
+
   .cloud-front-1 {
-    top: 46%;
+    top: 57%;
     left: -65%;
   }
   .cloud-front-1-mirror {
-    top: 46%;
-    right: -65%;
+    top: 53%;
+    right: -67%;
   }
 
   .cloud-front-2 {
-    top: 52%;
-    right: -65%;
+    top: 57%;
+    right: -70%;
+    opacity: 1 !important;
   }
   .cloud-front-2-mirror {
     top: 52%;
     left: -65%;
+    opacity: 0 !important;
   }
 
   .cloud-front-4 {
     bottom: 23%;
     left: -65%;
+    opacity: 0 !important;
   }
   .cloud-front-4-mirror {
     bottom: 23%;
     right: -65%;
+    opacity: 0 !important;
   }
 
   .cloud-front-5 {
     bottom: 0%;
     right: -65%;
+    opacity: 0 !important;
   }
   .cloud-front-5-mirror {
     bottom: 0%;
     left: -65%;
+    opacity: 0 !important;
   }
 
   .cloud-front-3 {
