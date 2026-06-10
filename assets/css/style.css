@@ -42,7 +42,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 #hero-section {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 250vh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -59,55 +59,113 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   z-index: 1;
 }
 
-/* NUBES DE FONDO (parallax lento) */
+/* NUBES DE FONDO (estáticas) */
 .clouds-back {
   position: absolute;
   inset: 0;
   z-index: 2;
-  overflow: hidden;
-  opacity: 0;
+  overflow: visible;
+  opacity: 1;
 }
 
 .cloud {
   position: absolute;
-  background: url('../../assets/images/cloud-element.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
+/* Cargar nubes personalizadas - Parallax diferencial */
 .cloud-back-1 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-back-1.png');
   width: 380px;
   height: 230px;
   top: 2%;
   left: 5%;
   opacity: 0.55;
+  z-index: 30;
+  transform-origin: center;
+  transform: scale(1.5);
+}
+
+.cloud-back-1-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-back-1.png');
+  width: 380px;
+  height: 230px;
+  top: 2%;
+  right: 5%;
+  left: auto;
+  opacity: 0.55;
+  z-index: 30;
+  transform: scaleX(-1) scale(1.5);
+  transform-origin: center;
 }
 
 .cloud-back-2 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-back-2.png');
   width: 420px;
   height: 260px;
   top: 18%;
   right: 2%;
   opacity: 0.50;
+  z-index: 30;
+  transform-origin: center;
+  transform: scale(1.5);
+}
+
+.cloud-back-2-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-back-2.png');
+  width: 420px;
+  height: 260px;
+  top: 18%;
+  left: 2%;
+  right: auto;
+  opacity: 0.50;
+  z-index: 30;
+  transform: scaleX(-1) scale(1.5);
+  transform-origin: center;
 }
 
 .cloud-back-3 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-back-3.png');
   width: 360px;
   height: 220px;
   top: 8%;
   left: 42%;
   opacity: 0.52;
+  z-index: 30;
+  transform-origin: center;
+  transform: scale(1.5);
 }
 
-/* MURDOCO (Centro) */
+.cloud-back-3-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-back-3.png');
+  width: 360px;
+  height: 220px;
+  top: 8%;
+  right: 42%;
+  left: auto;
+  opacity: 0.52;
+  z-index: 30;
+  transform: scaleX(-1) scale(1.5);
+  transform-origin: center;
+}
+
+/* MURDOCO (Centro - FIJO en pantalla) */
 .hero-content {
-  position: absolute;
+  position: fixed;
   z-index: 3;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
+  will-change: opacity, transform, mask-image;
 }
 
 .murdoco-image {
@@ -115,85 +173,477 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   height: auto;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
   opacity: 1;
-  transition: opacity 0.3s ease;
+  will-change: opacity, transform;
 }
 
-/* NUBES DE ADELANTE (parallax rápido - TAPA a Murdoco) */
+/* NUBES DE ADELANTE (estáticas - FRENTE de Murdoco) */
 .clouds-front {
   position: absolute;
   inset: 0;
   z-index: 4;
-  overflow: hidden;
+  overflow: visible;
+  opacity: 1;
 }
 
 .cloud-front-1 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-1.png');
   width: 400px;
   height: 250px;
-  top: 42%;
+  top: 38%;
   left: 5%;
   opacity: 0.88;
+  z-index: 50;
+  transform-origin: center;
+  transform: scale(1.6);
+}
+
+.cloud-front-1-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-1.png');
+  width: 400px;
+  height: 250px;
+  top: 38%;
+  right: 5%;
+  left: auto;
+  opacity: 0.88;
+  z-index: 50;
+  transform: scaleX(-1) scale(1.6);
+  transform-origin: center;
 }
 
 .cloud-front-2 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-2.png');
   width: 420px;
   height: 270px;
-  top: 48%;
+  top: 44%;
   right: 5%;
   opacity: 0.85;
+  z-index: 50;
+  transform-origin: center;
+  transform: scale(1.6);
+}
+
+.cloud-front-2-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-2.png');
+  width: 420px;
+  height: 270px;
+  top: 44%;
+  left: 5%;
+  right: auto;
+  opacity: 0.85;
+  z-index: 50;
+  transform: scaleX(-1) scale(1.6);
+  transform-origin: center;
 }
 
 .cloud-front-3 {
-  width: 380px;
-  height: 240px;
-  bottom: 18%;
-  left: 35%;
-  opacity: 0.92;
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-3.png');
+  /* width: clamp(400px, 40vw, 1000px); */
+  /* height: clamp(320px, 32vh, 800px); */
+  bottom: -40%;
+  left: -10%;
+  transform-origin: center bottom;
+  opacity: 0.8;
+  z-index: 100 !important;
+}
+
+.cloud-front-3-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-3.png');
+  /* width: clamp(400px, 40vw, 1000px); */
+  /* height: clamp(320px, 32vh, 800px); */
+  bottom: -40%;
+  right: -10%;
+  left: auto;
+  transform-origin: center bottom;
+  opacity: 0.8;
+  z-index: 100 !important;
+  transform: scaleX(-1);
+}
+
+/* Responsive en pantallas grandes */
+@media (min-width: 1600px) {
+  .cloud-front-3 {
+    width: clamp(500px, 129vw, 4528px);
+    height: clamp(400px, 130vh, 3000px);
+  }
+  .cloud-front-3-mirror {
+    width: clamp(500px, 129vw, 4528px);
+    height: clamp(400px, 130vh, 3000px);
+  }
+}
+
+/* Responsive en pantallas medianas grandes */
+@media (max-width: 1400px) {
+  .cloud-front-1, .cloud-front-1-mirror {
+    top: 40%;
+  }
+
+  .cloud-front-2, .cloud-front-2-mirror {
+    top: 46%;
+  }
+
+  .cloud-front-4, .cloud-front-4-mirror {
+    bottom: 17%;
+  }
+
+  .cloud-front-5, .cloud-front-5-mirror {
+    bottom: 19%;
+  }
+}
+
+/* Responsive en pantallas medianas */
+@media (max-width: 1200px) {
+  .cloud-front-1 {
+    top: 42%;
+    left: -5%;
+  }
+  .cloud-front-1-mirror {
+    top: 42%;
+    right: -5%;
+  }
+
+  .cloud-front-2 {
+    top: 48%;
+    right: -5%;
+  }
+  .cloud-front-2-mirror {
+    top: 48%;
+    left: -5%;
+  }
+
+  .cloud-front-4 {
+    bottom: 19%;
+    left: -5%;
+  }
+  .cloud-front-4-mirror {
+    bottom: 19%;
+    right: -5%;
+  }
+
+  .cloud-front-5 {
+    bottom: 0%;
+    right: -5%;
+  }
+  .cloud-front-5-mirror {
+    bottom: 0%;
+    left: -5%;
+  }
+
+  .cloud-front-3 {
+    width: clamp(375px, 141vw, 3624px);
+    height: clamp(300px, 115vh, 2424px);
+    left: -14%;
+  }
+  .cloud-front-3-mirror {
+    width: clamp(375px, 141vw, 3624px);
+    height: clamp(300px, 115vh, 2424px);
+    right: -14%;
+  }
+}
+
+/* Responsive en pantallas 1599px (transición entre 1200 y 1600) */
+@media (max-width: 1599px) {
+  .cloud-front-3 {
+    width: clamp(450px, 135vw, 4100px);
+    height: clamp(360px, 122vh, 2750px);
+    left: -12%;
+  }
+  .cloud-front-3-mirror {
+    width: clamp(450px, 135vw, 4100px);
+    height: clamp(360px, 122vh, 2750px);
+    right: -12%;
+  }
+}
+
+/* Responsive en pantallas 960px */
+@media (max-width: 960px) {
+  .cloud-front-1 {
+    left: -18%;
+  }
+  .cloud-front-1-mirror {
+    right: -18%;
+  }
+
+  .cloud-front-2 {
+    right: -18%;
+  }
+  .cloud-front-2-mirror {
+    left: -18%;
+  }
+
+  .cloud-front-4 {
+    left: -18%;
+  }
+  .cloud-front-4-mirror {
+    right: -18%;
+  }
+
+  .cloud-front-5 {
+    right: -18%;
+  }
+  .cloud-front-5-mirror {
+    left: -18%;
+  }
+}
+
+/* Responsive en pantallas 750px */
+@media (max-width: 750px) {
+  .cloud-front-1 {
+    left: -35%;
+  }
+  .cloud-front-1-mirror {
+    right: -35%;
+  }
+
+  .cloud-front-2 {
+    right: -35%;
+  }
+  .cloud-front-2-mirror {
+    left: -35%;
+  }
+
+  .cloud-front-4 {
+    left: -35%;
+  }
+  .cloud-front-4-mirror {
+    right: -35%;
+  }
+
+  .cloud-front-5 {
+    right: -35%;
+  }
+  .cloud-front-5-mirror {
+    left: -35%;
+  }
+}
+
+/* Responsive en pantallas pequeñas */
+@media (max-width: 768px) {
+  .cloud-front-1, .cloud-front-1-mirror {
+    top: 44%;
+  }
+
+  .cloud-front-2, .cloud-front-2-mirror {
+    top: 50%;
+  }
+
+  .cloud-front-4, .cloud-front-4-mirror {
+    bottom: 21%;
+  }
+
+  .cloud-front-5, .cloud-front-5-mirror {
+    bottom: 23%;
+  }
+
+  .cloud-front-3 {
+    width: clamp(240px, 208vw, 2173px);
+    height: clamp(192px, 115vh, 1440px);
+    left: -53%;
+  }
+  .cloud-front-3-mirror {
+    width: clamp(240px, 208vw, 2173px);
+    height: clamp(192px, 115vh, 1440px);
+    right: -53%;
+  }
+}
+
+/* Responsive en pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .cloud-front-1, .cloud-front-1-mirror {
+    top: 46%;
+  }
+
+  .cloud-front-2, .cloud-front-2-mirror {
+    top: 52%;
+  }
+
+  .cloud-front-4, .cloud-front-4-mirror {
+    bottom: 23%;
+  }
+
+  .cloud-front-5, .cloud-front-5-mirror {
+    bottom: 25%;
+  }
+
+  .cloud-front-3 {
+    width: clamp(150px, 170vw, 1358px);
+    height: clamp(120px, 90vh, 900px);
+  }
+  .cloud-front-3-mirror {
+    width: clamp(150px, 170vw, 1358px);
+    height: clamp(120px, 90vh, 900px);
+  }
 }
 
 .cloud-front-4 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-1.png');
   width: 360px;
   height: 230px;
-  bottom: 20%;
+  bottom: 15%;
   left: 15%;
   opacity: 0.87;
+  z-index: 50;
+  transform-origin: center;
+  transform: scale(1.6);
+}
+
+.cloud-front-4-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-1.png');
+  width: 360px;
+  height: 230px;
+  bottom: 15%;
+  right: 15%;
+  left: auto;
+  opacity: 0.87;
+  z-index: 50;
+  transform: scaleX(-1) scale(1.6);
+  transform-origin: center;
 }
 
 .cloud-front-5 {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-2.png');
   width: 390px;
   height: 250px;
-  bottom: 22%;
+  bottom: 0%;
   right: 18%;
   opacity: 0.90;
+  z-index: 50;
+  transform-origin: center;
+  transform: scale(1.6);
 }
 
-/* TEXTO "MURDOCO" (aparece cuando Murdoco desaparece) */
+.cloud-front-5-mirror {
+  position: fixed !important;
+  background-image: url('../../assets/images/clouds/cloud-front-2.png');
+  width: 390px;
+  height: 250px;
+  bottom: 0%;
+  left: 18%;
+  right: auto;
+  opacity: 0.90;
+  z-index: 50;
+  transform: scaleX(-1) scale(1.6);
+  transform-origin: center;
+}
+
+/* TEXTO "MURDOCO" (3D Metálico - Killing Transition - FIXED) */
 .hero-text {
-  position: absolute;
+  position: fixed;
   z-index: 5;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
+  will-change: opacity, transform;
 }
 
 .hero-text h1 {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(2rem, 15vw, 10rem);
   font-weight: 700;
-  color: var(--ink);
   margin: 0;
-  text-shadow: 3px 3px 0 rgba(255,255,255,0.3);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  opacity: 0;
+
+  /* 3D Metal Chrome Effect */
+  background: linear-gradient(
+    90deg,
+    #d0d0d0 0%,
+    #ffffff 15%,
+    #e0e0e0 30%,
+    #a0a0a0 50%,
+    #707070 60%,
+    #a0a0a0 70%,
+    #e0e0e0 85%,
+    #ffffff 95%,
+    #d0d0d0 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 100%;
+
+  /* Sombras dramáticas */
+  filter:
+    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))
+    drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3))
+    drop-shadow(-2px -2px 4px rgba(255, 255, 255, 0.3));
+
+  /* Reflejo especular */
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+
+  will-change: transform, opacity;
 }
 
-.hero-text p {
-  font-size: 1.3rem;
-  color: rgba(26,20,16,0.7);
-  margin-top: 0.5rem;
+.hero-plaque {
+  background: rgba(26, 20, 16, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(245, 240, 232, 0.15);
+  border-radius: 12px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  margin-top: 0.8rem;
+}
+
+@keyframes fadeInName {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDates {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hero-text .hero-name {
+  font-size: 1rem;
+  color: rgba(245, 240, 232, 0.8);
+  margin: 0;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+  will-change: opacity;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: fadeInName 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.hero-text .hero-dates {
+  font-size: 0.9rem;
+  color: rgba(245, 240, 232, 0.7);
+  margin-top: 0.4rem;
+  margin-bottom: 0;
   letter-spacing: 0.1em;
+  text-transform: none;
+  font-weight: 400;
+  will-change: opacity;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: fadeInDates 0.8s ease-out 0.5s forwards;
+  opacity: 0;
 }
 
 .scroll-hint {
