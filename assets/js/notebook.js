@@ -371,6 +371,7 @@ const NOTEBOOK = (() => {
           <span class="page-num">— ${i + 1} —</span>
         </div>
         <div class="page-content">${content}</div>
+        <div class="page-gloss"></div>
       `;
       bookEl.appendChild(page);
     });
@@ -384,6 +385,9 @@ const NOTEBOOK = (() => {
   }
 
   // ─── Animación de paso de página ───────────────────────────────────────────
+  // La hoja gira 180° sobre el lomo (borde izquierdo). Como tiene
+  // backface-visibility:hidden, al pasar los 90° se oculta su reverso y
+  // queda a la vista la hoja de abajo: igual que dar vuelta una página real.
   function turnPage(direction) {
     if (isTurning) return;
 
@@ -396,47 +400,31 @@ const NOTEBOOK = (() => {
 
     if (!currentEl || !nextEl) { isTurning = false; return; }
 
-    if (direction > 0) {
-      // Pasar hacia adelante
-      nextEl.classList.remove('hidden');
-      nextEl.style.zIndex = '1';
-      currentEl.style.zIndex = '2';
-      currentEl.classList.add('turning');
+    // La hoja que gira es la de adelante (avanzar) o la previa (retroceder)
+    const flipEl  = direction > 0 ? currentEl : nextEl;
+    const underEl = direction > 0 ? nextEl    : currentEl;
 
-      currentEl.addEventListener('transitionend', () => {
-        currentEl.classList.add('hidden');
-        currentEl.classList.remove('turning');
-        currentEl.style.zIndex = '';
-        nextEl.style.zIndex = '';
-        currentPage = next;
-        updatePageIndicator();
-        isTurning = false;
-      }, { once: true });
+    // La hoja de abajo debe estar visible para asomar bajo la que gira
+    underEl.classList.remove('hidden');
+    underEl.style.zIndex = '1';
 
-    } else {
-      // Pasar hacia atrás
-      nextEl.classList.remove('hidden');
-      nextEl.style.transform = 'rotateY(-160deg)';
-      nextEl.style.zIndex = '2';
-      currentEl.style.zIndex = '1';
+    flipEl.classList.remove('hidden');
+    flipEl.classList.add('flipping', direction > 0 ? 'flip-forward' : 'flip-backward');
 
-      // Forzar reflow para que la transición funcione
-      nextEl.getBoundingClientRect();
+    const cleanup = () => {
+      flipEl.classList.remove('flipping', 'flip-forward', 'flip-backward');
+      flipEl.style.zIndex   = '';
+      underEl.style.zIndex  = '';
+      // La hoja en la que estábamos siempre queda oculta tras el giro
+      currentEl.classList.add('hidden');
+      currentPage = next;
+      updatePageIndicator();
+      isTurning = false;
+    };
 
-      nextEl.style.transition = 'transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1)';
-      nextEl.style.transform  = 'rotateY(0deg)';
-
-      nextEl.addEventListener('transitionend', () => {
-        currentEl.classList.add('hidden');
-        nextEl.style.transform  = '';
-        nextEl.style.transition = '';
-        nextEl.style.zIndex     = '';
-        currentEl.style.zIndex  = '';
-        currentPage = next;
-        updatePageIndicator();
-        isTurning = false;
-      }, { once: true });
-    }
+    flipEl.addEventListener('animationend', cleanup, { once: true });
+    // Respaldo por si el navegador no dispara animationend
+    setTimeout(() => { if (isTurning) cleanup(); }, 1000);
   }
 
   // ─── Sincronización con Google Docs ────────────────────────────────────────
