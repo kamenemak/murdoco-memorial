@@ -57,12 +57,12 @@ const NOTEBOOK = (() => {
   // ───────────────────────────────────────────────────────────────────────────
 
   // Estado
-  let pages         = [];   // array de strings HTML (una por hoja)
-  let currentPage   = 0;
-  let isTurning     = false;
-  let refreshTimer  = null;
-  let resizeTimer   = null;
-  let lastDocHtml   = '';   // para no re-renderizar si el Doc no cambió
+  let pages        = [];   // array de strings HTML (una por hoja)
+  let currentPage  = 0;
+  let pageFlip     = null; // instancia de StPageFlip
+  let refreshTimer = null;
+  let resizeTimer  = null;
+  let lastDocHtml  = '';   // para no re-renderizar si el Doc no cambió
 
   // Elementos DOM
   const bookEl       = document.getElementById('book');
@@ -358,11 +358,13 @@ const NOTEBOOK = (() => {
 
   // ─── Render de páginas ─────────────────────────────────────────────────────
   function renderBook() {
+    // Destruir instancia anterior antes de limpiar el DOM
+    if (pageFlip) { try { pageFlip.destroy(); } catch (_) {} pageFlip = null; }
     bookEl.innerHTML = '';
+
     pages.forEach((content, i) => {
       const page = document.createElement('div');
-      page.className = 'page' + (i !== currentPage ? ' hidden' : '');
-      page.dataset.index = i;
+      page.className = 'page';
       page.innerHTML = `
         <div class="page-lines"></div>
         <div class="page-margin"></div>
@@ -371,10 +373,37 @@ const NOTEBOOK = (() => {
           <span class="page-num">— ${i + 1} —</span>
         </div>
         <div class="page-content">${content}</div>
-        <div class="page-gloss"></div>
       `;
       bookEl.appendChild(page);
     });
+
+    // Inicializar StPageFlip si está disponible y el contenedor tiene tamaño
+    if (typeof St !== 'undefined' && bookEl.offsetWidth > 0) {
+      pageFlip = new St.PageFlip(bookEl, {
+        width:               bookEl.offsetWidth,
+        height:              bookEl.offsetHeight || 520,
+        size:                'fixed',
+        usePortrait:         true,
+        showCover:           false,
+        drawShadow:          true,
+        flippingTime:        900,
+        maxShadowOpacity:    0.7,
+        showPageCorners:     true,
+        useMouseEvents:      true,   // permite arrastrar la esquina de la hoja
+        mobileScrollSupport: true,
+        swipeDistance:       40,
+        disableFlipByClick:  true,   // solo botones y arrastre, no click simple
+      });
+      pageFlip.loadFromHTML(bookEl.querySelectorAll('.page'));
+      pageFlip.on('flip', (e) => {
+        currentPage = e.data;
+        updatePageIndicator();
+      });
+      if (currentPage > 0 && currentPage < pages.length) {
+        pageFlip.turnToPage(currentPage);
+      }
+    }
+
     updatePageIndicator();
   }
 
@@ -384,47 +413,49 @@ const NOTEBOOK = (() => {
     nextBtn.disabled = currentPage >= pages.length - 1;
   }
 
-  // ─── Animación de paso de página ───────────────────────────────────────────
-  // La hoja gira 180° sobre el lomo (borde izquierdo). Como tiene
-  // backface-visibility:hidden, al pasar los 90° se oculta su reverso y
-  // queda a la vista la hoja de abajo: igual que dar vuelta una página real.
+  // ─── Paso de página ────────────────────────────────────────────────────────
+  let isAnimating = false;
+
   function turnPage(direction) {
-    if (isTurning) return;
+    if (!pageFlip || isAnimating) return;
+    const target = currentPage + direction;
+    if (target < 0 || target >= pages.length) return;
 
-    const next = currentPage + direction;
-    if (next < 0 || next >= pages.length) return;
+    if (direction > 0) {
+      // Hacia adelante: StPageFlip tiene el curl nativo
+      pageFlip.flip(target);
+    } else {
+      // Hacia atrás: overlay CSS porque StPageFlip portrait no anima backward
+      isAnimating = true;
+      const bookContainer = bookEl.parentElement; // #book-container
 
-    isTurning = true;
-    const currentEl = bookEl.querySelector(`.page[data-index="${currentPage}"]`);
-    const nextEl    = bookEl.querySelector(`.page[data-index="${next}"]`);
+      // Clonar la página actual como overlay que girará
+      const sourceEl = bookEl.querySelector('.page');
+      const overlay  = document.createElement('div');
+      overlay.id = 'book-flip-back-overlay';
+      overlay.innerHTML = `
+        <div class="page-lines"></div>
+        <div class="page-margin"></div>
+        <div class="page-content" style="padding:1rem 2rem 1.5rem 4rem;font-family:var(--font-mono);font-size:0.9rem;line-height:2rem;color:var(--ink);">${pages[currentPage]}</div>
+        <div class="page-gloss-back"></div>
+      `;
+      bookEl.style.position = 'relative';
+      bookEl.appendChild(overlay);
 
-    if (!currentEl || !nextEl) { isTurning = false; return; }
+      // Cambiar la página real a la mitad de la animación (en el punto ciego ~90°)
+      setTimeout(() => {
+        pageFlip.turnToPrevPage();
+        currentPage = target;
+        updatePageIndicator();
+      }, 420);
 
-    // La hoja que gira es la de adelante (avanzar) o la previa (retroceder)
-    const flipEl  = direction > 0 ? currentEl : nextEl;
-    const underEl = direction > 0 ? nextEl    : currentEl;
-
-    // La hoja de abajo debe estar visible para asomar bajo la que gira
-    underEl.classList.remove('hidden');
-    underEl.style.zIndex = '1';
-
-    flipEl.classList.remove('hidden');
-    flipEl.classList.add('flipping', direction > 0 ? 'flip-forward' : 'flip-backward');
-
-    const cleanup = () => {
-      flipEl.classList.remove('flipping', 'flip-forward', 'flip-backward');
-      flipEl.style.zIndex   = '';
-      underEl.style.zIndex  = '';
-      // La hoja en la que estábamos siempre queda oculta tras el giro
-      currentEl.classList.add('hidden');
-      currentPage = next;
-      updatePageIndicator();
-      isTurning = false;
-    };
-
-    flipEl.addEventListener('animationend', cleanup, { once: true });
-    // Respaldo por si el navegador no dispara animationend
-    setTimeout(() => { if (isTurning) cleanup(); }, 1000);
+      // Limpiar el overlay al terminar
+      overlay.addEventListener('animationend', () => {
+        overlay.remove();
+        isAnimating = false;
+      }, { once: true });
+      setTimeout(() => { overlay.remove(); isAnimating = false; }, 950);
+    }
   }
 
   // ─── Sincronización con Google Docs ────────────────────────────────────────
@@ -455,7 +486,7 @@ const NOTEBOOK = (() => {
       }
       lastDocHtml = html;
 
-      await applyDocHtml(html, { keepPage: silent });
+      await applyDocHtml(html, { keepPage: true }); // preservar página actual tras sync
       try { localStorage.setItem(CACHE_KEY, html); } catch (_) { /* sin espacio */ }
       setSyncState('synced', `Actualizado a las ${now}`);
 
@@ -489,6 +520,21 @@ const NOTEBOOK = (() => {
   async function init() {
     if (!bookEl) return;
 
+    // Registrar controles ANTES de la sincronización (que es async y puede tardar)
+    nextBtn.addEventListener('click', () => turnPage(1));
+    prevBtn.addEventListener('click', () => turnPage(-1));
+    refreshBtn.addEventListener('click', () => syncDoc());
+
+    document.addEventListener('keydown', (e) => {
+      const inNotebook = window.scrollY + window.innerHeight / 2 >
+                         document.getElementById('notebook-section').offsetTop;
+      if (!inNotebook) return;
+      if (e.key === 'ArrowRight') turnPage(1);
+      if (e.key === 'ArrowLeft')  turnPage(-1);
+    });
+
+    window.addEventListener('resize', onResize);
+
     if (docSource) {
       // Mostrar al instante la última versión en caché mientras sincroniza
       let cached = null;
@@ -506,30 +552,6 @@ const NOTEBOOK = (() => {
       renderBook();
       setSyncState('idle', 'Demo — conecta tu Google Doc en config.js (googleDocsId)');
     }
-
-    // Controles de navegación
-    nextBtn.addEventListener('click', () => turnPage(1));
-    prevBtn.addEventListener('click', () => turnPage(-1));
-    refreshBtn.addEventListener('click', () => syncDoc());
-
-    // Teclado
-    document.addEventListener('keydown', (e) => {
-      const inNotebook = window.scrollY + window.innerHeight / 2 >
-                         document.getElementById('notebook-section').offsetTop;
-      if (!inNotebook) return;
-      if (e.key === 'ArrowRight') turnPage(1);
-      if (e.key === 'ArrowLeft')  turnPage(-1);
-    });
-
-    // Swipe en móvil
-    let touchStartX = 0;
-    bookEl.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    bookEl.addEventListener('touchend',   (e) => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 50) turnPage(dx < 0 ? 1 : -1);
-    });
-
-    window.addEventListener('resize', onResize);
   }
 
   return { init };
