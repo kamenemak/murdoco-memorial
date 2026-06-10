@@ -21,10 +21,19 @@ const config = {
   youtubePlaylistId: 'PLePtecfNCaDBzbDa6qQAhm_zXbblN6YTZ',
 
   // ─────────────────────────────────────────────────────────────────
-  // GOOGLE DOCS — Cuaderno/Mensajes
+  // GOOGLE DOCS — Cuaderno/Mensajes ⭐ AUTOMÁTICO
   // ─────────────────────────────────────────────────────────────────
+  //
+  // 1. Crea un documento en Google Docs
+  // 2. Compartir → "Cualquier persona con el enlace" → Lector
+  // 3. Pega aquí el LINK COMPLETO del documento (o solo el ID)
+  //    Ejemplo: 'https://docs.google.com/document/d/1AbC.../edit'
+  //
+  // El cuaderno reparte el contenido en hojas automáticamente y se
+  // actualiza solo cada 5 minutos. Un salto de página en el Doc
+  // (Ctrl+Enter) fuerza una hoja nueva.
 
-  googleDocsId: 'TU_GOOGLE_DOCS_ID',
+    googleDocsId: '15GJArsLHbsgnhpTTWtReclKxQtoTPgdJ62oG7pgykX4',
 
   // ─────────────────────────────────────────────────────────────────
   // DEBUG — Para resolver problemas

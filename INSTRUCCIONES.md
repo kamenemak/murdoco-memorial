@@ -69,17 +69,26 @@ const TRACKS = [
 
 ---
 
-## 3️⃣ CUADERNO (Google Docs)
+## 3️⃣ CUADERNO (Google Docs) — ⚡ AUTOMÁTICO
 
-El cuaderno carga automáticamente desde un documento de Google Docs.
+El cuaderno carga automáticamente desde un documento de Google Docs y reparte el contenido en hojas según el espacio real de cada página.
 
 1. Crea un documento en Google Docs
-2. Abre `config.js`
-3. Reemplaza `TU_GOOGLE_DOCS_ID` con el ID de tu documento
+2. **Compártelo**: botón Compartir → "Cualquier persona con el enlace" → **Lector**
+3. Abre `config.js`
+4. Reemplaza `TU_GOOGLE_DOCS_ID` con el **link completo** del documento (o solo el ID)
 
-**Para encontrar el ID:**
+**Para encontrar el ID (si prefieres pegar solo el ID):**
 - URL: `https://docs.google.com/document/d/DOCUMENTO_ID/edit`
 - Copia lo que está entre `/d/` y `/edit`
+
+**Qué se conserva del documento:**
+- ✅ Negritas, cursivas y subrayados
+- ✅ Títulos y listas
+- ✅ Fotos pegadas en el documento (aparecen con marco tipo polaroid)
+- ✅ Salto de página (Ctrl+Enter) = hoja nueva en el cuaderno
+
+**Sincronización:** el cuaderno se actualiza solo cada 5 minutos, y también con el botón "↻ Actualizar". No hace falta volver a publicar nada: basta con guardar el Doc.
 
 ---
 
