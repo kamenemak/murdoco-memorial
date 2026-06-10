@@ -178,14 +178,18 @@ const GALLERY_GPHOTO = (() => {
       };
 
       counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
-      galleryImg.classList.remove('fade-out');
+
+      // Remover fade-out después de un pequeño delay para asegurar que la nueva imagen está lista
+      setTimeout(() => {
+        galleryImg.classList.remove('fade-out');
+      }, 100);
 
       // Precargar la siguiente imagen sin saltos
       const nextIndex = (currentIndex + 1) % images.length;
       setTimeout(() => {
         preloadImage(nextIndex);
-      }, 500);
-    }, 1000); // Transición más lenta y elegante
+      }, 1200);
+    }, 900);
   }
 
   function startTimer() {

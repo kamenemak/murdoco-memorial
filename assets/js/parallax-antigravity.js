@@ -6,6 +6,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const heroSection = document.getElementById('hero-section');
+  const gallerySection = document.getElementById('gallery-section');
   const heroText = document.querySelector('.hero-text');
   const murdocoImg = document.querySelector('.murdoco-image');
 
@@ -80,17 +81,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initializeClouds();
 
+  // Detectar cuando la galería comienza para hacer transición suave
+  const scrollHint = document.querySelector('.scroll-hint');
+  const sky = document.querySelector('.sky');
+  const cloudsFront = document.querySelector('.clouds-front');
+  const cloudsBack = document.querySelector('.clouds-back');
+  const heroName = document.querySelector('.hero-name');
+  const heroDates = document.querySelector('.hero-dates');
+
+  // Función auxiliar para actualizar opacidad
+  const updateHeroOpacity = () => {
+    const galleryRect = gallerySection ? gallerySection.getBoundingClientRect() : null;
+    const distanceToGallery = galleryRect ? galleryRect.top : Infinity;
+    const galleryTransitionProgress = Math.max(0, Math.min(1, (viewportHeight * 1.5 - distanceToGallery) / (viewportHeight * 1.2)));
+    const fadeOpacity = Math.max(0, 1 - galleryTransitionProgress);
+
+    if (sky) sky.style.opacity = fadeOpacity;
+    if (cloudsFront) cloudsFront.style.opacity = fadeOpacity;
+    if (cloudsBack) cloudsBack.style.opacity = fadeOpacity;
+    if (murdocoImg) murdocoImg.style.opacity = fadeOpacity;
+    if (scrollHint) scrollHint.style.opacity = fadeOpacity;
+
+    // Solo afectar heroText cuando estamos cerca de la galería (fadeOpacity < 1)
+    if (galleryTransitionProgress > 0) {
+      if (heroText) heroText.style.opacity = fadeOpacity;
+      if (heroName) heroName.style.opacity = fadeOpacity;
+      if (heroDates) heroDates.style.opacity = fadeOpacity;
+    }
+
+    if (fadeOpacity === 0) {
+      heroSection.style.visibility = 'hidden';
+      heroSection.style.pointerEvents = 'none';
+    } else {
+      heroSection.style.visibility = 'visible';
+      heroSection.style.pointerEvents = 'auto';
+    }
+  };
+
+  // Ejecutar al cargar para el caso de recarga en galería
+  updateHeroOpacity();
+
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     const progress = Math.min(scrollY / viewportHeight, 1);
 
-    // Murdoco desaparece más rápido (x2)
+    // Actualizar opacidad del hero basado en posición de la galería
+    updateHeroOpacity();
+
+    // Calcular si estamos en zona de transición
+    const galleryRect = gallerySection ? gallerySection.getBoundingClientRect() : null;
+    const distanceToGallery = galleryRect ? galleryRect.top : Infinity;
+    const galleryTransitionProgress = Math.max(0, Math.min(1, (viewportHeight * 1.5 - distanceToGallery) / (viewportHeight * 1.2)));
+    const fadeOpacity = Math.max(0, 1 - galleryTransitionProgress);
+
+    // Murdoco desaparece con scroll y también cuando se acerca la galería
     if (murdocoImg) {
-      murdocoImg.style.opacity = Math.max(0, 1 - progress * 2);
+      murdocoImg.style.opacity = Math.max(0, 1 - progress * 2) * fadeOpacity;
     }
 
-    // Texto 3D aparece más rápido (x2)
-    if (heroText) {
+    // Texto 3D aparece más rápido (x2) - solo si no estamos en zona de transición
+    if (heroText && galleryTransitionProgress === 0) {
       heroText.style.opacity = Math.min(1, progress * 2);
 
       const h1 = heroText.querySelector('h1');

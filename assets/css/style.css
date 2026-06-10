@@ -714,7 +714,6 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
    ═══════════════════════════════════════════════════════ */
 /* SCROLL REVEAL */
 section:not(#hero-section) {
-  opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }

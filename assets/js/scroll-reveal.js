@@ -11,8 +11,8 @@ const ParallaxEffect = (() => {
 // Scroll reveal para otras secciones
 const ScrollReveal = (() => {
   const options = {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.01,
+    rootMargin: '0px 0px 0px 0px'
   };
 
   function initObserver() {
