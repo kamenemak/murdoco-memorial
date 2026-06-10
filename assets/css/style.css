@@ -17,7 +17,7 @@
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: var(--font-body); background: var(--ink); color: var(--paper); overflow-x: hidden; }
+body { font-family: var(--font-body); background: transparent; color: var(--paper); overflow-x: hidden; }
 
 /* ─── Shared ─── */
 .scroll-hint {
@@ -38,89 +38,179 @@ body { font-family: var(--font-body); background: var(--ink); color: var(--paper
   letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2rem;
 }
 
-/* HERO CON NUBES */
+/* HERO CON PARALLAX 3D */
 #hero-section {
-  position: relative; width: 100%; height: 100vh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  overflow: hidden; background: #87ceeb;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-background {
-  position: absolute; inset: 0; width: 100%; height: 100%;
+.sky {
+  position: absolute;
+  inset: 0;
+  background: url('../../assets/images/clouds-sky.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: 1;
 }
 
-.clouds {
-  width: 100%; height: 100%; display: block;
+/* NUBES DE FONDO (parallax lento) */
+.clouds-back {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  opacity: 0;
 }
 
 .cloud {
-  animation-duration: 20s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
+  position: absolute;
+  background: url('../../assets/images/cloud-element.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.cloud-1 { animation-name: floatCloud1; }
-.cloud-2 { animation-name: floatCloud2; animation-delay: -5s; }
-.cloud-3 { animation-name: floatCloud3; animation-delay: -10s; }
-
-@keyframes floatCloud1 {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(40px); }
+.cloud-back-1 {
+  width: 380px;
+  height: 230px;
+  top: 2%;
+  left: 5%;
+  opacity: 0.55;
 }
 
-@keyframes floatCloud2 {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-35px); }
+.cloud-back-2 {
+  width: 420px;
+  height: 260px;
+  top: 18%;
+  right: 2%;
+  opacity: 0.50;
 }
 
-@keyframes floatCloud3 {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(30px); }
+.cloud-back-3 {
+  width: 360px;
+  height: 220px;
+  top: 8%;
+  left: 42%;
+  opacity: 0.52;
 }
 
+/* MURDOCO (Centro) */
 .hero-content {
-  position: relative; z-index: 2; text-align: center; animation: fadeInDown 1s ease-out;
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
-.murdoco-container {
-  width: 300px; height: 400px; margin: 0 auto 2rem;
-  position: relative;
+.murdoco-image {
+  max-width: 350px;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
-#murdoco-photo {
-  width: 100%; height: 100%; object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+/* NUBES DE ADELANTE (parallax rápido - TAPA a Murdoco) */
+.clouds-front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
 }
 
-.hero-title {
-  font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem);
-  color: var(--ink); margin: 1rem 0 0.5rem; font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+.cloud-front-1 {
+  width: 400px;
+  height: 250px;
+  top: 42%;
+  left: 5%;
+  opacity: 0.88;
 }
 
-.hero-subtitle {
-  font-size: 1.2rem; color: rgba(26,20,16,0.8); margin-bottom: 3rem;
+.cloud-front-2 {
+  width: 420px;
+  height: 270px;
+  top: 48%;
+  right: 5%;
+  opacity: 0.85;
+}
+
+.cloud-front-3 {
+  width: 380px;
+  height: 240px;
+  bottom: 18%;
+  left: 35%;
+  opacity: 0.92;
+}
+
+.cloud-front-4 {
+  width: 360px;
+  height: 230px;
+  bottom: 20%;
+  left: 15%;
+  opacity: 0.87;
+}
+
+.cloud-front-5 {
+  width: 390px;
+  height: 250px;
+  bottom: 22%;
+  right: 18%;
+  opacity: 0.90;
+}
+
+/* TEXTO "MURDOCO" (aparece cuando Murdoco desaparece) */
+.hero-text {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.hero-text h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  text-shadow: 3px 3px 0 rgba(255,255,255,0.3);
   letter-spacing: 0.05em;
 }
 
-.scroll-indicator {
-  display: flex; flex-direction: column; align-items: center; gap: 1rem;
-  color: rgba(26,20,16,0.6); animation: bounce 3s infinite;
+.hero-text p {
+  font-size: 1.3rem;
+  color: rgba(26,20,16,0.7);
+  margin-top: 0.5rem;
+  letter-spacing: 0.1em;
 }
 
-.scroll-indicator span {
-  font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
+.scroll-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: 2rem;
+  color: rgba(26,20,16,0.6);
+  animation: bounce 2s infinite;
 }
 
 /* GALERÍA
    ═══════════════════════════════════════════════════════ */
 /* SCROLL REVEAL */
-section {
+section:not(#hero-section) {
   opacity: 0;
   transform: translateY(40px);
   transition: opacity 0.8s ease, transform 0.8s ease;
@@ -129,6 +219,10 @@ section {
 section.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+#hero-section {
+  opacity: 1;
 }
 
 #gallery-section {

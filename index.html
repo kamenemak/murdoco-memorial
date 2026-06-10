@@ -59,50 +59,40 @@
     }
   </style>
 
-  <!-- SECCIÓN 0: HERO CON NUBES Y MURDOCO -->
+  <!-- SECCIÓN 0: HERO CON PARALLAX 3D -->
   <section id="hero-section">
-    <div class="hero-background">
-      <svg class="clouds" viewBox="0 0 1200 400" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#87ceeb;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#e0f6ff;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <rect width="1200" height="400" fill="url(#skyGradient)"/>
+    <!-- Cielo gradiente -->
+    <div class="sky"></div>
 
-        <!-- Nubes animadas -->
-        <g class="cloud cloud-1">
-          <ellipse cx="200" cy="150" rx="80" ry="50" fill="white" opacity="0.8"/>
-          <ellipse cx="250" cy="140" rx="100" ry="60" fill="white" opacity="0.8"/>
-          <ellipse cx="150" cy="140" rx="90" ry="55" fill="white" opacity="0.8"/>
-        </g>
-        <g class="cloud cloud-2">
-          <ellipse cx="900" cy="200" rx="90" ry="55" fill="white" opacity="0.7"/>
-          <ellipse cx="960" cy="185" rx="110" ry="65" fill="white" opacity="0.7"/>
-          <ellipse cx="840" cy="190" rx="85" ry="50" fill="white" opacity="0.7"/>
-        </g>
-        <g class="cloud cloud-3">
-          <ellipse cx="500" cy="250" rx="75" ry="45" fill="white" opacity="0.75"/>
-          <ellipse cx="555" cy="240" rx="95" ry="58" fill="white" opacity="0.75"/>
-          <ellipse cx="450" cy="245" rx="80" ry="48" fill="white" opacity="0.75"/>
-        </g>
-      </svg>
+    <!-- Nubes de fondo (parallax lento) -->
+    <div class="clouds-back" id="cloudsBack">
+      <div class="cloud cloud-back-1"></div>
+      <div class="cloud cloud-back-2"></div>
+      <div class="cloud cloud-back-3"></div>
     </div>
 
-    <div class="hero-content">
-      <div class="murdoco-container">
-        <img id="murdoco-photo" src="assets/images/ChatGPT Image 9 jun 2026, 19_16_59.png" alt="Murdoco - Sebastian Antonio Bobadilla Rivas" />
-      </div>
-      <h1 class="hero-title">Murdoco</h1>
-      <p class="hero-subtitle">Sebastian Antonio Bobadilla Rivas</p>
-      <div class="scroll-indicator">
-        <span>Desplázate para continuar</span>
-        <svg width="20" height="30" viewBox="0 0 20 30">
-          <path d="M10 2v18M4 14l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
+    <!-- Murdoco (centro) -->
+    <div class="hero-content" id="murdocoContainer">
+      <img src="assets/images/murdoco-hero.png" alt="Murdoco - Sebastian Antonio Bobadilla Rivas" class="murdoco-image" />
     </div>
+
+    <!-- Nubes de adelante (parallax rápido - tapa a Murdoco) -->
+    <div class="clouds-front" id="cloudsFront">
+      <div class="cloud cloud-front-1"></div>
+      <div class="cloud cloud-front-2"></div>
+      <div class="cloud cloud-front-3"></div>
+      <div class="cloud cloud-front-4"></div>
+      <div class="cloud cloud-front-5"></div>
+    </div>
+
+    <!-- Texto "MURDOCO" que aparece cuando desaparece la foto -->
+    <div class="hero-text" id="heroText">
+      <h1>MURDOCO</h1>
+      <p>Sebastian Antonio Bobadilla Rivas</p>
+    </div>
+
+    <!-- Indicador de scroll -->
+    <div class="scroll-hint">↓</div>
   </section>
 
   <!-- SECCIÓN 1: GALERÍA -->
