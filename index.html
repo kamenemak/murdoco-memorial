@@ -127,19 +127,32 @@
   <!-- SECCIÓN 2: MÚSICA -->
   <section id="music-section">
     <div class="music-wrapper">
-      <h2 class="section-eyebrow">Banda Sonora</h2>
-      <p class="section-sub">Playlist especial para Murdoco</p>
+      <div class="music-header">
+        <div class="eq-bars" aria-hidden="true">
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+        </div>
+        <h2 class="section-eyebrow">Banda Sonora</h2>
+        <p class="section-sub">Playlist especial para Murdoco</p>
+      </div>
 
-      <!-- YouTube Music Embed -->
-      <div id="youtube-player-container" style="width: 100%; max-width: 600px; margin: 2rem auto;">
+      <div class="player-frame">
         <iframe
           id="yt-player-iframe"
-          style="border-radius: 12px; width: 100%; height: 500px; border: none;"
           src="https://www.youtube.com/embed/videoseries?list=PLePtecfNCaDBzbDa6qQAhm_zXbblN6YTZ&autoplay=1&mute=1&enablejsapi=1"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen="" loading="lazy">
+          allowfullscreen loading="lazy">
         </iframe>
       </div>
+
+      <p class="music-caption">La música que lo acompañaba</p>
     </div>
     <a class="scroll-hint" href="#notebook-section">&#8595;</a>
   </section>
