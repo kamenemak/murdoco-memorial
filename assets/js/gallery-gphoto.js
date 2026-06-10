@@ -98,16 +98,18 @@ const GALLERY_GPHOTO = (() => {
         return;
       }
 
-      // Convertir a formato de galería
-      // Usar Google Drive API v3 con alt=media para API Key pública
+      // Convertir a formato de galería.
+      // Se usa el CDN de Google (lh3.googleusercontent.com) en vez de
+      // alt=media para evitar rate limiting y bloqueos por IP.
+      // thumbnailLink ya viene en la respuesta; solo le subimos la resolución.
       images = files.map((file, idx) => {
-        // URL oficial de Google Drive API v3 que funciona con API Key
-        const imageUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${config.googleApiKey}`;
-
+        const imageUrl = file.thumbnailLink
+          ? file.thumbnailLink.replace(/=s\d+/, '=s1200')
+          : `https://drive.google.com/thumbnail?id=${file.id}&sz=s1200`;
         return {
-          id: file.id,
+          id:    file.id,
           title: file.name || `Foto ${idx + 1}`,
-          src: imageUrl
+          src:   imageUrl
         };
       });
 
@@ -242,9 +244,10 @@ const GALLERY_GPHOTO = (() => {
 
     log(`🎬 Galería inicializada con ${images.length} foto(s)`);
 
-    // Precargar imágenes
-    for (let i = 0; i < Math.min(10, images.length); i++) {
-      preloadImage(i);
+    // Precargar primeras imágenes con delay escalonado (evita rate limiting)
+    const preloadCount = Math.min(5, images.length);
+    for (let i = 0; i < preloadCount; i++) {
+      setTimeout(() => preloadImage(i), i * 500);
     }
 
     createCarousel();
