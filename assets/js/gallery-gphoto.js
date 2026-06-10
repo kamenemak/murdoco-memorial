@@ -14,9 +14,14 @@ const GALLERY_GPHOTO = (() => {
   let timer = null;
   const INTERVAL_MS = 5000;
   let preloadedImages = {}; // Cache de imágenes precargadas
+  const MAX_VISIBLE_IMAGES = 7; // 3 a cada lado + 1 centro
+  const SIDES = 3;
+  let touchStartX = 0;
+  let touchEndX = 0;
 
   // DOM
   const galleryImg = document.getElementById('gallery-img');
+  const galleryContainer = document.querySelector('.gallery-container');
   const titleEl = document.getElementById('gallery-title');
   const counterEl = document.getElementById('gallery-counter');
   const btnPrev = document.getElementById('prev-img');
@@ -131,16 +136,118 @@ const GALLERY_GPHOTO = (() => {
   // GALERÍA
   // ────────────────────────────────────────────────────────
 
+  function createCarousel() {
+    if (!galleryContainer) return;
+
+    // Limpiar
+    galleryContainer.innerHTML = '';
+
+    // Crear carousel
+    const carousel = document.createElement('div');
+    carousel.className = 'gallery-carousel';
+
+    // Mostrar 7 imágenes (3 a cada lado + 1 centro)
+    for (let i = -SIDES; i <= SIDES; i++) {
+      const index = (currentIndex + i + images.length) % images.length;
+      const img = images[index];
+
+      const strip = document.createElement('div');
+      strip.className = 'gallery-strip';
+      strip.dataset.position = i;
+
+      const imgEl = document.createElement('img');
+      imgEl.src = img.src;
+      imgEl.alt = img.title;
+      imgEl.onerror = () => {
+        log(`⚠️ Error cargando foto: ${img.title}`);
+      };
+
+      strip.appendChild(imgEl);
+
+      // Click para cambiar
+      strip.addEventListener('click', () => {
+        const targetIndex = (currentIndex + i + images.length) % images.length;
+        goTo(targetIndex);
+        startTimer();
+      });
+
+      carousel.appendChild(strip);
+    }
+
+    galleryContainer.appendChild(carousel);
+    updateCarouselClasses();
+  }
+
+  function updateCarouselClasses() {
+    const strips = document.querySelectorAll('.gallery-strip');
+
+    // Primero, fade out las imágenes
+    strips.forEach((strip) => {
+      const img = strip.querySelector('img');
+      if (img) {
+        img.style.opacity = '0';
+      }
+    });
+
+    // Cambiar las clases para la transición de tamaño
+    strips.forEach((strip, idx) => {
+      const position = idx - SIDES;
+      const distance = Math.abs(position);
+
+      strip.classList.remove('center', 'near-1', 'near-2', 'far');
+
+      if (position === 0) {
+        strip.classList.add('center');
+      } else if (distance === 1) {
+        strip.classList.add('near-1');
+      } else if (distance === 2) {
+        strip.classList.add('near-2');
+      } else {
+        strip.classList.add('far');
+      }
+    });
+
+    // Después de 150ms (fade out completo), cambiar las imágenes
+    setTimeout(() => {
+      strips.forEach((strip, idx) => {
+        const position = idx - SIDES;
+        const imageIndex = (currentIndex + position + images.length) % images.length;
+        const img = strip.querySelector('img');
+        if (img) {
+          img.src = images[imageIndex].src;
+          img.alt = images[imageIndex].title;
+        }
+      });
+
+      // Después de cambiar el src, fade in
+      setTimeout(() => {
+        strips.forEach((strip) => {
+          const img = strip.querySelector('img');
+          if (img) {
+            img.style.opacity = '1';
+          }
+        });
+      }, 50);
+    }, 150);
+
+    counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
+  }
+
+  function renderCarousel() {
+    updateCarouselClasses();
+  }
+
   function initGallery() {
     if (images.length === 0) return;
 
     log(`🎬 Galería inicializada con ${images.length} foto(s)`);
 
-    // Precargar la primera y segunda imagen
-    preloadImage(0);
-    preloadImage(1);
+    // Precargar imágenes
+    for (let i = 0; i < Math.min(10, images.length); i++) {
+      preloadImage(i);
+    }
 
-    goTo(0);
+    createCarousel();
     startTimer();
 
     // Eventos
@@ -155,6 +262,16 @@ const GALLERY_GPHOTO = (() => {
       if (e.key === ' ') { togglePause(); }
     });
 
+    // Touch/Swipe
+    galleryContainer?.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+
+    galleryContainer?.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+
     // Visibilidad
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
@@ -165,31 +282,31 @@ const GALLERY_GPHOTO = (() => {
     });
   }
 
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swipe izquierda = siguiente
+        goTo(currentIndex + 1);
+      } else {
+        // Swipe derecha = anterior
+        goTo(currentIndex - 1);
+      }
+      startTimer();
+    }
+  }
+
   function goTo(index) {
     currentIndex = ((index % images.length) + images.length) % images.length;
-    const img = images[currentIndex];
+    renderCarousel();
 
-    galleryImg.classList.add('fade-out');
-
-    setTimeout(() => {
-      galleryImg.src = img.src;
-      galleryImg.onerror = () => {
-        log(`⚠️ Error cargando foto: ${img.title}`);
-      };
-
-      counterEl.textContent = `${currentIndex + 1} / ${images.length}`;
-
-      // Remover fade-out después de un pequeño delay para asegurar que la nueva imagen está lista
-      setTimeout(() => {
-        galleryImg.classList.remove('fade-out');
-      }, 100);
-
-      // Precargar la siguiente imagen sin saltos
-      const nextIndex = (currentIndex + 1) % images.length;
-      setTimeout(() => {
-        preloadImage(nextIndex);
-      }, 1200);
-    }, 900);
+    // Precargar próximas imágenes
+    for (let i = 1; i < SIDES + 1; i++) {
+      preloadImage((currentIndex + i) % images.length);
+      preloadImage((currentIndex - i + images.length) % images.length);
+    }
   }
 
   function startTimer() {
