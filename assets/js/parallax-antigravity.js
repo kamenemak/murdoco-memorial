@@ -38,10 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Determinar el scale una sola vez según el tamaño de la pantalla
   const getCloudScale = () => {
     let scaleValue = 1.6;
+    if (window.innerWidth <= 1599) scaleValue = 1.5;
     if (window.innerWidth <= 1400) scaleValue = 1.4;
     if (window.innerWidth <= 1200) scaleValue = 1.2;
-    if (window.innerWidth <= 768) scaleValue = 0.9;
-    if (window.innerWidth <= 480) scaleValue = 0.7;
+    if (window.innerWidth <= 768) scaleValue = 1.0;
+    if (window.innerWidth <= 480) scaleValue = 1.2;
     return scaleValue;
   };
 

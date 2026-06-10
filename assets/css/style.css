@@ -244,7 +244,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   background-image: url('../../assets/images/clouds/cloud-front-3.png');
   /* width: clamp(400px, 40vw, 1000px); */
   /* height: clamp(320px, 32vh, 800px); */
-  bottom: -40%;
+  bottom: -47%;
   left: -10%;
   transform-origin: center bottom;
   opacity: 0.8;
@@ -256,7 +256,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   background-image: url('../../assets/images/clouds/cloud-front-3.png');
   /* width: clamp(400px, 40vw, 1000px); */
   /* height: clamp(320px, 32vh, 800px); */
-  bottom: -40%;
+  bottom: -47%;
   right: -10%;
   left: auto;
   transform-origin: center bottom;
@@ -391,6 +391,30 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   }
 }
 
+/* Responsive en pantallas 700px para abajo */
+@media (max-width: 700px) {
+  .cloud-front-2 {
+    opacity: 0;
+  }
+  .cloud-front-2-mirror {
+    opacity: 0;
+  }
+
+  .cloud-front-3 {
+    bottom: -29%;
+  }
+  .cloud-front-3-mirror {
+    bottom: -43%;
+  }
+
+  .cloud-front-4 {
+    opacity: 0;
+  }
+  .cloud-front-4-mirror {
+    opacity: 0;
+  }
+}
+
 /* Responsive en pantallas 750px */
 @media (max-width: 750px) {
   .cloud-front-1 {
@@ -454,20 +478,40 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 /* Responsive en pantallas muy pequeñas */
 @media (max-width: 480px) {
-  .cloud-front-1, .cloud-front-1-mirror {
+  .cloud-front-1 {
     top: 46%;
+    left: -65%;
+  }
+  .cloud-front-1-mirror {
+    top: 46%;
+    right: -65%;
   }
 
-  .cloud-front-2, .cloud-front-2-mirror {
+  .cloud-front-2 {
     top: 52%;
+    right: -65%;
+  }
+  .cloud-front-2-mirror {
+    top: 52%;
+    left: -65%;
   }
 
-  .cloud-front-4, .cloud-front-4-mirror {
+  .cloud-front-4 {
     bottom: 23%;
+    left: -65%;
+  }
+  .cloud-front-4-mirror {
+    bottom: 23%;
+    right: -65%;
   }
 
-  .cloud-front-5, .cloud-front-5-mirror {
-    bottom: 25%;
+  .cloud-front-5 {
+    bottom: 0%;
+    right: -65%;
+  }
+  .cloud-front-5-mirror {
+    bottom: 0%;
+    left: -65%;
   }
 
   .cloud-front-3 {
@@ -486,7 +530,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   width: 360px;
   height: 230px;
   bottom: 15%;
-  left: 15%;
+  left: 61%;
   opacity: 0.87;
   z-index: 50;
   transform-origin: center;
