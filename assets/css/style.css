@@ -38,9 +38,99 @@ body { font-family: var(--font-body); background: var(--ink); color: var(--paper
   letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2rem;
 }
 
-/* ═══════════════════════════════════════════════════════
-   GALERÍA
+/* HERO CON NUBES */
+#hero-section {
+  position: relative; width: 100%; height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden; background: #87ceeb;
+}
+
+.hero-background {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+
+.clouds {
+  width: 100%; height: 100%; display: block;
+}
+
+.cloud {
+  animation-duration: 20s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.cloud-1 { animation-name: floatCloud1; }
+.cloud-2 { animation-name: floatCloud2; animation-delay: -5s; }
+.cloud-3 { animation-name: floatCloud3; animation-delay: -10s; }
+
+@keyframes floatCloud1 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(40px); }
+}
+
+@keyframes floatCloud2 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-35px); }
+}
+
+@keyframes floatCloud3 {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+}
+
+.hero-content {
+  position: relative; z-index: 2; text-align: center; animation: fadeInDown 1s ease-out;
+}
+
+.murdoco-container {
+  width: 300px; height: 400px; margin: 0 auto 2rem;
+  position: relative;
+}
+
+#murdoco-photo {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+}
+
+.hero-title {
+  font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4rem);
+  color: var(--ink); margin: 1rem 0 0.5rem; font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem; color: rgba(26,20,16,0.8); margin-bottom: 3rem;
+  letter-spacing: 0.05em;
+}
+
+.scroll-indicator {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  color: rgba(26,20,16,0.6); animation: bounce 3s infinite;
+}
+
+.scroll-indicator span {
+  font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* GALERÍA
    ═══════════════════════════════════════════════════════ */
+/* SCROLL REVEAL */
+section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 #gallery-section {
   position: relative; width: 100%; height: 100vh;
   display: flex; align-items: center; justify-content: center;
