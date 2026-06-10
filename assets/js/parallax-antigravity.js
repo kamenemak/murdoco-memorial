@@ -155,13 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Cálculos de movimiento
-    const moveUp = Math.min(scrollY * 0.01, 25);
-    const sideMove = Math.min(scrollY * 0.005, 10);
-    const moveDown = Math.max(scrollY * -0.01, -25);
+    // Aumentar movimiento en móvil para que se note más
+    const isMobile = window.innerWidth <= 768;
+    const movementMultiplier = isMobile ? 1.8 : 1;
+
+    const moveUp = Math.min(scrollY * 0.01 * movementMultiplier, 25 * movementMultiplier);
+    const sideMove = Math.min(scrollY * 0.005 * movementMultiplier, 10 * movementMultiplier);
+    const moveDown = Math.max(scrollY * -0.01 * movementMultiplier, -25 * movementMultiplier);
     const sideMoveOpposite = sideMove * -1;
 
     // Movimiento para nubes de atrás (sin límite, mucho más largo)
-    const sideBackMove = scrollY * 0.02;
+    const sideBackMove = scrollY * 0.02 * movementMultiplier;
 
     // Aplicar movimiento a nubes normales (bajan a derecha)
     if (clouds.front1) clouds.front1.style.transform = `scale(${cloudScale}) translateX(${sideMove}px) translateY(${moveUp}px)`;
@@ -185,5 +189,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clouds.back1Mirror) clouds.back1Mirror.style.transform = `scaleX(-1) scale(1.5) translateX(${-sideBackMove}px)`;
     if (clouds.back2Mirror) clouds.back2Mirror.style.transform = `scaleX(-1) scale(1.5) translateX(${-sideBackMove}px)`;
     if (clouds.back3Mirror) clouds.back3Mirror.style.transform = `scaleX(-1) scale(1.5) translateX(${-sideBackMove}px)`;
-  });
+  }, { passive: true });
 });
