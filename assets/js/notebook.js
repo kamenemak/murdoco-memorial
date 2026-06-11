@@ -229,20 +229,57 @@ const NOTEBOOK = (() => {
 
   // ── Render ───────────────────────────────────────────────────────────
 
+  function roseSvg(cls) {
+    return `<img class="nb-portada-rose ${cls}" src="assets/images/rosa-esquina.png" alt="" aria-hidden="true">`;
+  }
+
   function buildDom(pageHtmls) {
     const book = document.getElementById('book');
     book.innerHTML = '';
-    const last = pageHtmls.length - 1;
+
+    // ── Portada izquierda (marca de agua con nombre) ──
+    const pLeft = document.createElement('div');
+    pLeft.className = 'nb-page nb-page--hard nb-portada';
+    pLeft.innerHTML = `<div class="nb-portada__inner nb-portada__inner--left">
+      <div class="nb-portada-wm">El<br>Sebastián<br>Antonio<br>Bobadilla</div>
+    </div>`;
+    book.appendChild(pLeft);
+
+    // ── Portada derecha (cover chicana con nombre) ──
+    const pRight = document.createElement('div');
+    pRight.className = 'nb-page nb-page--hard nb-portada';
+    pRight.innerHTML = `<div class="nb-portada__inner nb-portada__inner--right">
+      ${roseSvg('nb-portada-rose--tl')}
+      ${roseSvg('nb-portada-rose--tr')}
+      ${roseSvg('nb-portada-rose--bl')}
+      ${roseSvg('nb-portada-rose--br')}
+      <div class="nb-portada-frame">
+        <div class="nb-portada-name">
+          <div class="nb-portada-star-top">★</div>
+          <div class="nb-portada-name__line">SEBASTIÁN</div>
+          <div class="nb-portada-name__line nb-portada-name__line--mid">★ ANTONIO ★</div>
+          <div class="nb-portada-name__line">BOBADILLA</div>
+          <div class="nb-portada-name__line nb-portada-name__line--mid">★ RIVAS ★</div>
+        </div>
+      </div>
+    </div>`;
+    book.appendChild(pRight);
+
+    // ── Páginas de contenido ──
+    const totalPages = pageHtmls.length + 2;
     pageHtmls.forEach((html, i) => {
+      const pageIdx = i + 2;
       const div = document.createElement('div');
-      const isCover = i === 0 || i === last;
-      div.className = isCover ? 'nb-page nb-page--hard' : 'nb-page';
+      const isLast = pageIdx === totalPages - 1;
+      div.className = isLast ? 'nb-page nb-page--hard' : 'nb-page';
       div.innerHTML = `<div class="nb-page__inner">
         <div class="nb-page__content">${html}</div>
-        ${isCover ? '' : `<span class="nb-page__num">${i + 1}</span>`}
+        ${isLast ? '' : `<span class="nb-page__num">${i + 1}</span>`}
       </div>`;
       book.appendChild(div);
     });
+
+    return totalPages;
   }
 
   function mount(pageHtmls) {
@@ -255,7 +292,7 @@ const NOTEBOOK = (() => {
       document.getElementById('book-container').appendChild(book);
     }
 
-    buildDom(pageHtmls);
+    const totalPages = buildDom(pageHtmls);
 
     const { w, h } = pageSize();
 
@@ -280,12 +317,12 @@ const NOTEBOOK = (() => {
     });
 
     pageFlip.loadFromHTML(document.querySelectorAll('#book .nb-page'));
-    pageFlip.on('flip', e => updateControls(e.data, pageHtmls.length));
+    pageFlip.on('flip', e => updateControls(e.data, totalPages));
     pageFlip.on('changeOrientation', e => {
       document.getElementById('book')
         .classList.toggle('nb--two-page', e.data === 'landscape');
     });
-    updateControls(0, pageHtmls.length);
+    updateControls(0, totalPages);
     lastBucket = pageSize().bucket;
   }
 

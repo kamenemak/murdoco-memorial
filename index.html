@@ -6,7 +6,7 @@
   <title>Murdoco — Recordatorio de Sebastian Antonio Bobadilla Rivas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Courier+Prime:ital@0;1&family=Cinzel:wght@700;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/css/style.css"/>
   <!-- Google Identity Services (nueva API) -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -161,16 +161,30 @@
   <section id="notebook-section">
     <h2 class="section-eyebrow">El Cuaderno de Murdoco</h2>
     <p class="section-sub">Cartas, recuerdos y mensajes</p>
+    <div class="nb-section-stars">★ <span class="nb-section-stars__big">★</span> ★</div>
 
-    <div id="notebook-controls">
-      <button type="button" id="btn-prev-page" disabled title="Página anterior">&#8592;</button>
-      <span id="page-indicator">— / —</span>
-      <button type="button" id="btn-next-page" disabled title="Página siguiente">&#8594;</button>
-      <button type="button" id="btn-refresh-doc" title="Recargar">&#8635;</button>
+    <div id="notebook-controls-wrapper">
+      <span class="nb-ctrl-star" aria-hidden="true">★</span>
+      <img class="nb-ctrl-scroll nb-ctrl-scroll--left" src="assets/images/navegadbor-Ornament.png" alt="" aria-hidden="true">
+      <div id="notebook-controls">
+        <button type="button" id="btn-prev-page" disabled title="Página anterior">&#8592;</button>
+        <span id="page-indicator">— / —</span>
+        <button type="button" id="btn-next-page" disabled title="Página siguiente">&#8594;</button>
+        <button type="button" id="btn-refresh-doc" title="Recargar">&#8635;</button>
+      </div>
+      <img class="nb-ctrl-scroll nb-ctrl-scroll--right" src="assets/images/navegadbor-Ornament.png" alt="" aria-hidden="true">
+      <span class="nb-ctrl-star" aria-hidden="true">★</span>
     </div>
 
-    <div id="book-container">
-      <div id="book"></div>
+    <div id="book-frame">
+      <!-- Rosas del marco exterior — imagen: rosa-marco.png -->
+      <img class="nb-marco-rose nb-marco-rose--tl" src="assets/images/rosa-marco.png" alt="" aria-hidden="true">
+      <img class="nb-marco-rose nb-marco-rose--tr" src="assets/images/rosa-marco.png" alt="" aria-hidden="true">
+      <img class="nb-marco-rose nb-marco-rose--bl" src="assets/images/rosa-marco.png" alt="" aria-hidden="true">
+      <img class="nb-marco-rose nb-marco-rose--br" src="assets/images/rosa-marco.png" alt="" aria-hidden="true">
+      <div id="book-container">
+        <div id="book"></div>
+      </div>
     </div>
 
     <div id="sync-status"></div>
