@@ -63,6 +63,7 @@ const NOTEBOOK = (() => {
   let refreshTimer = null;
   let resizeTimer  = null;
   let lastDocHtml  = '';   // para no re-renderizar si el Doc no cambió
+  let isSyncing    = false; // lock para evitar applyDocHtml concurrente
 
   // Elementos DOM
   const bookEl       = document.getElementById('book');
@@ -377,31 +378,50 @@ const NOTEBOOK = (() => {
       bookEl.appendChild(page);
     });
 
-    // Inicializar StPageFlip si está disponible y el contenedor tiene tamaño
-    if (typeof St !== 'undefined' && bookEl.offsetWidth > 0) {
-      pageFlip = new St.PageFlip(bookEl, {
-        width:               bookEl.offsetWidth,
-        height:              bookEl.offsetHeight || 520,
-        size:                'fixed',
-        usePortrait:         true,
-        showCover:           false,
-        drawShadow:          true,
-        flippingTime:        900,
-        maxShadowOpacity:    0.7,
-        showPageCorners:     true,
-        useMouseEvents:      true,   // permite arrastrar la esquina de la hoja
-        mobileScrollSupport: true,
-        swipeDistance:       40,
-        disableFlipByClick:  true,   // solo botones y arrastre, no click simple
-      });
-      pageFlip.loadFromHTML(bookEl.querySelectorAll('.page'));
-      pageFlip.on('flip', (e) => {
-        currentPage = e.data;
-        updatePageIndicator();
-      });
-      if (currentPage > 0 && currentPage < pages.length) {
-        pageFlip.turnToPage(currentPage);
+    // Inicializar StPageFlip (siempre intenta, falla con gracia)
+    if (typeof St !== 'undefined') {
+      try {
+        const w = bookEl.offsetWidth  || bookEl.parentElement?.offsetWidth || 780;
+        const h = bookEl.offsetHeight || 520;
+        pageFlip = new St.PageFlip(bookEl, {
+          width:               w,
+          height:              h,
+          size:                'fixed',
+          usePortrait:         true,
+          showCover:           false,
+          drawShadow:          true,
+          flippingTime:        900,
+          maxShadowOpacity:    0.7,
+          showPageCorners:     true,
+          useMouseEvents:      true,
+          mobileScrollSupport: true,
+          swipeDistance:       40,
+          disableFlipByClick:  true,
+        });
+        pageFlip.loadFromHTML(bookEl.querySelectorAll('.page'));
+        pageFlip.on('flip', (e) => {
+          currentPage = e.data;
+          updatePageIndicator();
+        });
+        if (currentPage > 0 && currentPage < pages.length) {
+          pageFlip.turnToPage(currentPage);
+        }
+      } catch (err) {
+        console.warn('[Notebook] StPageFlip init falló, reintentando con observer:', err);
+        pageFlip = null;
       }
+    }
+
+    // Si no se inicializó (sin dimensiones o CDN no cargó), reintentar cuando
+    // el libro entre al viewport
+    if (!pageFlip && pages.length > 0) {
+      const retryObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          retryObserver.disconnect();
+          renderBook();
+        }
+      }, { threshold: 0.1 });
+      retryObserver.observe(bookEl);
     }
 
     updatePageIndicator();
@@ -462,14 +482,20 @@ const NOTEBOOK = (() => {
   const docSource = resolveDocSource(RAW_DOC);
 
   async function applyDocHtml(html, { keepPage = false } = {}) {
-    const nodes = extractDocNodes(html);
-    if (nodes.length === 0) throw new Error('Documento vacío');
-    const newPages = await paginate(nodes);
+    if (isSyncing) return; // evitar ejecución concurrente (corrompe el measurer)
+    isSyncing = true;
+    try {
+      const nodes = extractDocNodes(html);
+      if (nodes.length === 0) throw new Error('Documento vacío');
+      const newPages = await paginate(nodes);
 
-    const previousPage = currentPage;
-    pages       = newPages;
-    currentPage = keepPage ? Math.min(previousPage, pages.length - 1) : 0;
-    renderBook();
+      const previousPage = currentPage;
+      pages       = newPages;
+      currentPage = keepPage ? Math.min(previousPage, pages.length - 1) : 0;
+      renderBook();
+    } finally {
+      isSyncing = false;
+    }
   }
 
   async function syncDoc({ silent = false } = {}) {
