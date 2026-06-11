@@ -1325,7 +1325,7 @@ section.visible {
   transition: background 0.2s;
 }
 .nb-side-btn:active { background: rgba(122,26,46,0.85); }
-.nb-side-btn--prev { left: -3rem; }
+.nb-side-btn--prev { left: 2rem; }
 .nb-side-btn--next { right: 2rem; }
 @media (max-width: 590px) {
   .nb-side-btn--prev { left: 1rem; }
