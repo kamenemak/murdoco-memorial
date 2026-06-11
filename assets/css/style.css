@@ -71,7 +71,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 .sky {
   position: absolute;
   inset: 0;
-  background: url('../../assets/images/clouds-sky.png');
+  background: url('../../assets/images/clouds-sky.webp');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -97,7 +97,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 /* Cargar nubes personalizadas - Parallax diferencial */
 .cloud-back-1 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-back-1.png');
+  background-image: url('../../assets/images/clouds/cloud-back-1.webp');
   width: 380px;
   height: 230px;
   top: 2%;
@@ -110,7 +110,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-back-1-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-back-1.png');
+  background-image: url('../../assets/images/clouds/cloud-back-1.webp');
   width: 380px;
   height: 230px;
   top: 2%;
@@ -124,7 +124,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-back-2 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-back-2.png');
+  background-image: url('../../assets/images/clouds/cloud-back-2.webp');
   width: 420px;
   height: 260px;
   top: 18%;
@@ -137,7 +137,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-back-2-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-back-2.png');
+  background-image: url('../../assets/images/clouds/cloud-back-2.webp');
   width: 420px;
   height: 260px;
   top: 18%;
@@ -151,7 +151,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-back-3 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-back-3.png');
+  background-image: url('../../assets/images/clouds/cloud-back-3.webp');
   width: 360px;
   height: 220px;
   top: 8%;
@@ -164,7 +164,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-back-3-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-back-3.png');
+  background-image: url('../../assets/images/clouds/cloud-back-3.webp');
   width: 360px;
   height: 220px;
   top: 8%;
@@ -214,7 +214,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-1 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-1.png');
+  background-image: url('../../assets/images/clouds/cloud-front-1.webp');
   width: 400px;
   height: 250px;
   top: 38%;
@@ -227,7 +227,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-1-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-1.png');
+  background-image: url('../../assets/images/clouds/cloud-front-1.webp');
   width: 400px;
   height: 250px;
   top: 38%;
@@ -241,7 +241,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-2 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-2.png');
+  background-image: url('../../assets/images/clouds/cloud-front-2.webp');
   width: 420px;
   height: 270px;
   top: 44%;
@@ -254,7 +254,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-2-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-2.png');
+  background-image: url('../../assets/images/clouds/cloud-front-2.webp');
   width: 420px;
   height: 270px;
   top: 44%;
@@ -268,7 +268,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-3 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-3.png');
+  background-image: url('../../assets/images/clouds/cloud-front-3.webp');
   /* width: clamp(400px, 40vw, 1000px); */
   /* height: clamp(320px, 32vh, 800px); */
   bottom: -47%;
@@ -280,7 +280,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-3-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-3.png');
+  background-image: url('../../assets/images/clouds/cloud-front-3.webp');
   /* width: clamp(400px, 40vw, 1000px); */
   /* height: clamp(320px, 32vh, 800px); */
   bottom: -47%;
@@ -575,7 +575,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-4 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-1.png');
+  background-image: url('../../assets/images/clouds/cloud-front-1.webp');
   width: 360px;
   height: 230px;
   bottom: 15%;
@@ -588,7 +588,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-4-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-1.png');
+  background-image: url('../../assets/images/clouds/cloud-front-1.webp');
   width: 360px;
   height: 230px;
   bottom: 15%;
@@ -602,7 +602,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-5 {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-2.png');
+  background-image: url('../../assets/images/clouds/cloud-front-2.webp');
   width: 390px;
   height: 250px;
   bottom: 0%;
@@ -615,7 +615,7 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
 
 .cloud-front-5-mirror {
   position: fixed !important;
-  background-image: url('../../assets/images/clouds/cloud-front-2.png');
+  background-image: url('../../assets/images/clouds/cloud-front-2.webp');
   width: 390px;
   height: 250px;
   bottom: 0%;
@@ -1048,210 +1048,165 @@ section.visible {
    CUADERNO
    ═══════════════════════════════════════════════════════ */
 #notebook-section {
-  min-height: 100vh; padding: 5rem 2rem;
+  min-height: 100vh;
+  padding: 5rem 1rem 4rem;
   background: linear-gradient(135deg, #1e1812 0%, #2a2018 100%);
-  display: flex; flex-direction: column; align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
 }
-#notebook-wrapper { width: 100%; max-width: 900px; }
+
+/* ── Controles (prev / indicador / next / refresh) ── */
 #notebook-controls {
-  display: flex; justify-content: center; align-items: center;
-  gap: 1.5rem; margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 #notebook-controls button {
-  background: transparent; border: 1px solid rgba(245,240,232,0.2);
-  color: var(--paper); padding: 0.5rem 1.2rem; border-radius: 4px;
-  cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+  background: transparent;
+  border: 1px solid rgba(245,240,232,0.25);
+  color: var(--paper);
+  width: 2.4rem; height: 2.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: border-color 0.2s, color 0.2s;
+  display: flex; align-items: center; justify-content: center;
 }
-#notebook-controls button:hover { border-color: var(--sepia); color: var(--sepia); }
+#notebook-controls button:hover:not(:disabled) {
+  border-color: var(--sepia);
+  color: var(--sepia);
+}
+#notebook-controls button:disabled { opacity: 0.3; cursor: default; }
+#btn-refresh-doc { font-size: 1.1rem !important; }
 #page-indicator {
-  font-family: var(--font-mono); font-size: 0.85rem;
-  color: rgba(245,240,232,0.5); min-width: 100px; text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: rgba(245,240,232,0.45);
+  min-width: 5rem;
+  text-align: center;
 }
-/* ── Escritorio / atril con foco de luz cálido ── */
+
+/* ── Mesa / atril ── */
 #book-container {
-  display: flex; justify-content: center; align-items: center;
-  margin-bottom: 1.5rem;
-  perspective: 2200px;
-  padding: 2.5rem 1.5rem;
-  border-radius: 14px;
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  justify-content: center;
+  /* overflow DEBE ser visible para que el canvas 3D del flip no quede recortado */
+  overflow: visible;
+  padding: 2rem;
+  border-radius: 12px;
   background:
-    radial-gradient(ellipse 65% 75% at 50% 42%, rgba(184,134,11,0.12), transparent 72%),
+    radial-gradient(ellipse 60% 70% at 50% 44%, rgba(184,134,11,0.10), transparent 70%),
     linear-gradient(160deg, #2c2118 0%, #16100b 100%);
-  box-shadow: inset 0 0 90px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.04);
+  box-shadow: inset 0 0 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  /* Perspectiva para el efecto 3D del curl */
+  perspective: 2000px;
 }
 
-/* ── Tapa / encuadernación de cuero alrededor de las hojas ── */
-#book-stage {
+/* StPageFlip gestiona width/height del #book vía inline styles */
+#book {
   position: relative;
-  display: inline-block;       /* se ajusta al ancho del libro (no colapsa) */
-  max-width: 100%;
-  padding: 14px;
-  border-radius: 5px 9px 9px 5px;
-  background: linear-gradient(135deg, #3c2c1e 0%, #241a12 60%, #1c130c 100%);
-  box-shadow:
-    /* grosor de hojas apiladas (abajo-derecha) */
-    3px 3px 0 #ece4d4, 6px 6px 0 #e0d7c5, 9px 9px 0 #d4cab6,
-    /* sombra proyectada del libro sobre la mesa */
-    14px 18px 40px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-}
-/* brillo sutil de cuero en el borde superior de la tapa */
-#book-stage::before {
-  content: ''; position: absolute; inset: 0;
-  border-radius: 5px 9px 9px 5px; pointer-events: none;
-  background: linear-gradient(120deg, rgba(255,255,255,0.05), transparent 30%);
-}
-
-/* ancho/alto reales los fija notebook.js; estos son respaldo en px (sin %) */
-#book { position: relative; width: 860px; max-width: 100%; height: 560px; }
-
-/* ── Lomo central (solo en modo libro abierto) ── */
-#book.two-page::after {
-  content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
-  width: 54px; transform: translateX(-50%);
-  background: linear-gradient(to right,
-    transparent 0%, rgba(0,0,0,0.22) 42%,
-    rgba(0,0,0,0.28) 50%, rgba(0,0,0,0.22) 58%, transparent 100%);
-  pointer-events: none; z-index: 9;
-}
-
-/* ─── Página ─── */
-.page {
-  position: absolute; width: 100%; height: 100%;
-  background: var(--paper);
-  border-radius: 2px 8px 8px 2px;
-  box-shadow: 4px 4px 20px rgba(0,0,0,0.4), inset -3px 0 8px rgba(0,0,0,0.06);
-  overflow: hidden; display: flex; flex-direction: column;
-}
-/* Hoja invisible usada solo para medir cuánto contenido cabe */
-.page.measuring {
-  inset: 0; width: auto; height: auto;
-  visibility: hidden; pointer-events: none; z-index: -1;
-}
-
-/* ── Flip hacia atrás: overlay que cubre el libro mientras StPageFlip
-   hace turnToPrevPage() al vuelo. La perspectiva la pone el parent. ── */
-#book-flip-back-overlay {
-  position: absolute; inset: 0; z-index: 30; pointer-events: none;
-  transform-origin: left center;
+  /* Necesario para que el flip 3D tenga contexto de transformación */
   transform-style: preserve-3d;
-  backface-visibility: hidden;
-  background: var(--paper);
-  border-radius: 2px 8px 8px 2px;
-  box-shadow: 4px 4px 20px rgba(0,0,0,0.4), inset -3px 0 8px rgba(0,0,0,0.06);
-  display: flex; flex-direction: column; overflow: hidden;
-  animation: flipBack 0.85s cubic-bezier(0.55, 0.01, 0.2, 0.99) forwards;
-}
-#book-flip-back-overlay .page-lines {
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(to bottom, transparent 0px, transparent 31px, #c8d8e8 31px, #c8d8e8 32px);
-  pointer-events: none; opacity: 0.55;
-}
-#book-flip-back-overlay .page-margin {
-  position: absolute; left: 68px; top: 0; width: 2px; height: 100%;
-  background: rgba(192,57,43,0.4); z-index: 1; pointer-events: none;
-}
-#book-flip-back-overlay::before {
-  content: ''; position: absolute; left: 0; top: 0; width: 36px; height: 100%;
-  background: repeating-linear-gradient(to bottom, transparent 0px, transparent 26px, rgba(0,0,0,0.08) 26px, rgba(0,0,0,0.08) 28px);
-  border-right: 3px solid rgba(139,111,71,0.3); z-index: 1;
-}
-#book-flip-back-overlay .page-gloss-back {
-  position: absolute; inset: 0; z-index: 6; pointer-events: none;
-  background: linear-gradient(to left,
-    rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 35%,
-    rgba(255,255,255,0.22) 58%, transparent 100%);
-  animation: glossBack 0.85s ease-in-out forwards;
-}
-/* El libro necesita perspectiva para que el overlay se vea 3D */
-#book-container { perspective: 1100px; }
-
-@keyframes flipBack {
-  0%   { transform: rotateY(-180deg) skewY(0deg);    }
-  18%  { transform: rotateY(-152deg) skewY(0.4deg);  }
-  50%  { transform: rotateY(-90deg)  skewY(1deg);    }
-  82%  { transform: rotateY(-28deg)  skewY(1.5deg);  }
-  100% { transform: rotateY(0deg)    skewY(0deg);    }
-}
-@keyframes glossBack {
-  0%   { opacity: 0; }
-  30%  { opacity: 0.7; }
-  70%  { opacity: 1; }
-  100% { opacity: 0; }
 }
 
-/* espiral */
-.page::before {
-  content: ''; position: absolute; left: 0; top: 0; width: 36px; height: 100%;
-  background: repeating-linear-gradient(to bottom, transparent 0px, transparent 26px, rgba(0,0,0,0.08) 26px, rgba(0,0,0,0.08) 28px);
-  border-right: 3px solid rgba(139,111,71,0.3); z-index: 1;
+/* ── Página ── */
+.nb-page {
+  background: #f8f3e8;
+  /* overflow visible para que StPageFlip renderice el borde doblado del curl */
+  overflow: visible;
 }
-/* sombra derecha */
-.page::after {
-  content: ''; position: absolute; top: 0; right: 0; width: 20px; height: 100%;
-  background: linear-gradient(to left, rgba(0,0,0,0.06), transparent); pointer-events: none;
+.nb-page__inner {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1.5rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden; /* recorta el texto dentro de la hoja */
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: #2c1a0e;
+  word-break: break-word;
+}
+/* Líneas de cuaderno */
+.nb-page__inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    transparent 0px,
+    transparent calc(1.75 * 0.92rem - 1px),
+    rgba(150,180,210,0.35) calc(1.75 * 0.92rem - 1px),
+    rgba(150,180,210,0.35) calc(1.75 * 0.92rem)
+  );
+  pointer-events: none;
+}
+.nb-page__content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow: hidden;
+}
+.nb-page__content h1 { font-size: 1.25rem; margin: 0 0 0.4rem; font-weight: 700; }
+.nb-page__content h2 { font-size: 1.05rem; margin: 0 0 0.3rem; font-weight: 700; }
+.nb-page__content h3 { font-size: 0.95rem; margin: 0 0 0.2rem; font-weight: 700; }
+.nb-page__content p  { margin: 0 0 0.1rem; }
+.nb-page__content p:empty { min-height: 1.75em; }
+.nb-page__content ul,
+.nb-page__content ol  { padding-left: 1.2rem; margin: 0 0 0.3rem; }
+.nb-page__content blockquote {
+  margin: 0.3rem 0 0.3rem 0.5rem;
+  padding-left: 0.7rem;
+  border-left: 2px solid rgba(139,111,71,0.4);
+  font-style: italic;
+}
+.nb-page__content img {
+  display: block;
+  max-width: 90%;
+  max-height: 200px;
+  object-fit: contain;
+  margin: 0.5rem auto;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.nb-page__num {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(100,70,40,0.5);
+  z-index: 2;
 }
 
-.page-lines {
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(to bottom, transparent 0px, transparent 31px, #c8d8e8 31px, #c8d8e8 32px);
-  pointer-events: none; opacity: 0.55;
-}
-.page-margin {
-  position: absolute; left: 68px; top: 0; width: 2px; height: 100%;
-  background: rgba(192,57,43,0.4); z-index: 1; pointer-events: none;
-}
-.page-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.8rem 1.5rem 0.5rem 3rem;
-  border-bottom: 2px solid rgba(139,111,71,0.25); position: relative; z-index: 2;
-}
-.page-header .date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--sepia); font-style: italic; }
-.page-header .page-num { font-family: var(--font-mono); font-size: 0.72rem; color: rgba(139,111,71,0.6); }
-.page-content {
-  flex: 1; padding: 1rem 2rem 2rem 4rem; position: relative; z-index: 2;
-  overflow: hidden; font-family: var(--font-mono); font-size: 0.9rem;
-  line-height: 2rem; color: var(--ink); word-break: break-word;
-}
-.page-content h1 { font-family: var(--font-display); font-size: 1.4rem; color: var(--ink); line-height: 1.3; margin-bottom: 0.3rem; }
-.page-content h2 { font-family: var(--font-display); font-size: 1.1rem; color: var(--ink); line-height: 1.3; margin-bottom: 0.2rem; }
-.page-content ul, .page-content ol { padding-left: 1.2rem; }
-.page-content a { color: var(--rust); text-decoration: underline dotted; }
-.page-content h3 { font-family: var(--font-display); font-size: 1rem; color: var(--ink); line-height: 1.3; }
-.page-content p { margin: 0; }
-.page-content p:empty { min-height: 2rem; }
-.page-content strong { color: var(--ink); font-weight: 700; }
-.page-content blockquote {
-  margin: 0.3rem 0 0.3rem 0.8rem; padding-left: 0.8rem;
-  border-left: 2px solid rgba(139,111,71,0.4); font-style: italic;
-}
-.page-content img {
-  display: block; max-width: 85%; max-height: 280px; object-fit: contain;
-  margin: 0.5rem auto; padding: 6px 6px 14px;
-  background: #fff; border-radius: 2px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-  transform: rotate(-1.2deg);
+/* ── Lomo central en modo dos páginas ── */
+#book.nb--two-page::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 40px;
+  transform: translateX(-50%);
+  background: linear-gradient(to right,
+    transparent 0%, rgba(0,0,0,0.18) 40%,
+    rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.18) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 10;
 }
 
-#notebook-controls button:disabled {
-  opacity: 0.35; cursor: default;
-}
-#notebook-controls button:disabled:hover { border-color: rgba(245,240,232,0.2); color: var(--paper); }
-
-/* ─── Sync ─── */
+/* ── Estado de carga / error ── */
 #sync-status {
-  display: flex; align-items: center; gap: 0.6rem; justify-content: center;
-  font-size: 0.78rem; color: rgba(245,240,232,0.4);
+  font-size: 0.78rem;
+  color: rgba(245,240,232,0.4);
+  min-height: 1.2rem;
+  text-align: center;
 }
-#sync-status.synced  { color: #4caf50; }
-#sync-status.syncing { color: var(--gold); }
+#sync-status.loading { color: var(--gold); }
 #sync-status.error   { color: var(--rust); }
-#btn-refresh-doc {
-  background: transparent; border: 1px solid rgba(245,240,232,0.15);
-  color: rgba(245,240,232,0.4); padding: 0.2rem 0.6rem; border-radius: 4px;
-  cursor: pointer; font-size: 0.78rem; transition: all 0.2s;
-}
-#btn-refresh-doc:hover { border-color: var(--sepia); color: var(--sepia); }
 
 /* ═══════ FOOTER ═══════ */
 #site-footer {
@@ -1266,8 +1221,6 @@ section.visible {
 @media (max-width: 640px) {
   #player-box { flex-direction: column; }
   #vinyl-disc { width: 90px; height: 90px; }
-  #book { height: 420px; }
-  .page-content { padding: 1rem 1.2rem 1rem 3rem; font-size: 0.8rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

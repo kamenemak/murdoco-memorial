@@ -76,7 +76,7 @@
 
     <!-- Murdoco (centro) -->
     <div class="hero-content" id="murdocoContainer">
-      <img src="assets/images/murdoco-hero.png" alt="Murdoco - Sebastian Antonio Bobadilla Rivas" class="murdoco-image" />
+      <img src="assets/images/murdoco-hero.webp" alt="Murdoco - Sebastian Antonio Bobadilla Rivas" class="murdoco-image" />
     </div>
 
     <!-- Nubes de adelante (parallax rápido - tapa a Murdoco) -->
@@ -161,23 +161,19 @@
   <section id="notebook-section">
     <h2 class="section-eyebrow">El Cuaderno de Murdoco</h2>
     <p class="section-sub">Cartas, recuerdos y mensajes</p>
-    <div id="notebook-wrapper">
-      <div id="notebook-controls">
-        <button id="btn-prev-page">&#9664; Anterior</button>
-        <span id="page-indicator">Página 1</span>
-        <button id="btn-next-page">Siguiente &#9654;</button>
-      </div>
-      <div id="book-container">
-        <div id="book-stage">
-          <div id="book"></div>
-        </div>
-      </div>
-      <div id="sync-status">
-        <span id="sync-icon">&#9702;</span>
-        <span id="sync-text">Sin sincronizar</span>
-        <button id="btn-refresh-doc">&#8635; Actualizar</button>
-      </div>
+
+    <div id="notebook-controls">
+      <button type="button" id="btn-prev-page" disabled title="Página anterior">&#8592;</button>
+      <span id="page-indicator">— / —</span>
+      <button type="button" id="btn-next-page" disabled title="Página siguiente">&#8594;</button>
+      <button type="button" id="btn-refresh-doc" title="Recargar">&#8635;</button>
     </div>
+
+    <div id="book-container">
+      <div id="book"></div>
+    </div>
+
+    <div id="sync-status"></div>
   </section>
 
   <footer id="site-footer">
@@ -186,9 +182,8 @@
 
   <!-- Configuración (debe cargarse primero) -->
   <script src="config.js"></script>
-  <!-- StPageFlip: page-turn con curl de papel realista -->
+  <!-- StPageFlip -->
   <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
-
   <!-- Scripts principales -->
   <!-- <script src="assets/js/auth-gis.js"></script> Desactivado: usando API Key en lugar de OAuth -->
   <script src="assets/js/parallax-antigravity.js"></script>

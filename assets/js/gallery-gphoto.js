@@ -275,14 +275,32 @@ const GALLERY_GPHOTO = (() => {
       handleSwipe();
     }, false);
 
-    // Visibilidad
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        clearInterval(timer);
-      } else if (isPlaying) {
+    // Visibilidad: pausar el timer si la pestaña está oculta O si la
+    // galería no está en pantalla (el usuario hizo scroll a otra sección).
+    // Reanudar solo cuando ambas condiciones se cumplen y no hay pausa manual.
+    let sectionVisible = true;
+
+    function updatePlayback() {
+      if (isPlaying && sectionVisible && !document.hidden) {
         startTimer();
+      } else {
+        clearInterval(timer);
       }
-    });
+    }
+
+    document.addEventListener('visibilitychange', updatePlayback);
+
+    // Observador de pantalla: vigila la sección de la galería
+    const gallerySection = document.getElementById('gallery-section');
+    if (gallerySection && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        sectionVisible = entries[0].isIntersecting;
+        updatePlayback();
+      }, {
+        threshold: 0.15 // Se activa cuando al menos el 15% es visible
+      });
+      observer.observe(gallerySection);
+    }
   }
 
   function handleSwipe() {
