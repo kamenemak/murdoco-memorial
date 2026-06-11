@@ -1155,8 +1155,8 @@ section.visible {
 .nb-page__content h1 { font-size: 1.25rem; margin: 0 0 0.4rem; font-weight: 700; }
 .nb-page__content h2 { font-size: 1.05rem; margin: 0 0 0.3rem; font-weight: 700; }
 .nb-page__content h3 { font-size: 0.95rem; margin: 0 0 0.2rem; font-weight: 700; }
-.nb-page__content p  { margin: 0 0 0.1rem; }
-.nb-page__content p:empty { min-height: 1.75em; }
+.nb-page__content p  { margin: 0 0 0.6em; }
+.nb-page__content p:empty { min-height: 1.75em; margin: 0; }
 .nb-page__content ul,
 .nb-page__content ol  { padding-left: 1.2rem; margin: 0 0 0.3rem; }
 .nb-page__content blockquote {
@@ -1167,10 +1167,10 @@ section.visible {
 }
 .nb-page__content img {
   display: block;
-  max-width: 90%;
-  max-height: 200px;
+  max-width: 55%;
+  max-height: 160px;
   object-fit: contain;
-  margin: 0.5rem auto;
+  margin: 0.4rem auto;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }

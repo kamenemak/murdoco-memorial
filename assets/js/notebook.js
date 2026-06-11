@@ -120,6 +120,7 @@ const NOTEBOOK = (() => {
     const cH = h - PAD_Y;
 
     const measurer = document.createElement('div');
+    measurer.id = '__nb_measurer';
     measurer.style.cssText = [
       'position:fixed', 'left:-9999px', 'top:0',
       `width:${cW}px`, `height:${cH}px`,
@@ -127,6 +128,11 @@ const NOTEBOOK = (() => {
       "font-family:'Georgia',serif", 'font-size:0.92rem', 'line-height:1.75',
       'word-break:break-word',
     ].join(';');
+    // Inyectar el mismo límite de imagen que el CSS de las páginas reales,
+    // para que la paginación mida el tamaño correcto y las imágenes quepan con texto.
+    const measurerStyle = document.createElement('style');
+    measurerStyle.textContent = '#__nb_measurer img{max-width:55%;max-height:160px;object-fit:contain;display:block;}';
+    document.head.appendChild(measurerStyle);
     document.body.appendChild(measurer);
 
     try {
@@ -169,12 +175,25 @@ const NOTEBOOK = (() => {
         continue;
       }
 
-      // Block itself overflows — split word by word
-      const tag    = /^H[1-6]$/.test(block.tagName) ? block.tagName.toLowerCase() : 'p';
-      const words  = (block.textContent || '').split(/\s+/).filter(Boolean);
-      let   chunk  = [];
-
       if (prev.trim()) pages.push(prev);   // push what was accumulated
+
+      // Bloque con imagen: no se puede dividir por palabras, va solo en su página
+      if (block.querySelector && block.querySelector('img')) {
+        flush(html);
+        continue;
+      }
+
+      // Block itself overflows — split word by word
+      const tag   = /^H[1-6]$/.test(block.tagName) ? block.tagName.toLowerCase() : 'p';
+      // Usar innerHTML con espacios en los tags de cierre para evitar
+      // que spans adyacentes sin espacio se concatenen ("tengoHola")
+      const words = block.innerHTML
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/<\/\w+>/g, ' ')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .split(/\s+/).filter(Boolean);
+      let   chunk  = [];
 
       for (const word of words) {
         chunk.push(word);
@@ -191,6 +210,7 @@ const NOTEBOOK = (() => {
 
     flush();
     measurer.remove();
+    measurerStyle.remove();
     return pages.length ? pages : ['<p>Sin contenido todavía.</p>'];
   }
 
