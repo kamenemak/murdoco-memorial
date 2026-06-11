@@ -1174,7 +1174,7 @@ section.visible {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-bottom: 1.8rem;
+  margin-top: 1.8rem;
 }
 
 /* ── Estrella exterior ── */
@@ -1259,7 +1259,6 @@ section.visible {
   width: 100%;
   max-width: 980px;
   min-height: 600px;
-  contain: layout size;
   overflow-anchor: none;
   display: flex;
   justify-content: center;
@@ -1449,6 +1448,9 @@ section.visible {
   position: relative !important;
   transition: box-shadow 0.4s ease;
 }
+.stf__wrapper {
+  perspective: 2500px !important;
+}
 
 /* Lomo izquierdo oscuro (como la encuadernación) */
 .stf__parent::before {
@@ -1617,12 +1619,17 @@ section.visible {
 
 /* ═══════ FOOTER ═══════ */
 #site-footer {
-  background: var(--ink); text-align: center; padding: 2rem;
-  font-size: 0.82rem; color: rgba(245,240,232,0.3);
-  border-top: 1px solid rgba(245,240,232,0.06);
+  background: #050205;
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.82rem;
+  color: rgba(245,240,232,0.3);
+  border-top: 1px solid rgba(200,162,50,0.2);
+  position: relative;
+  display: block;
 }
-#site-footer a { color: var(--sepia); text-decoration: none; }
-#site-footer a:hover { color: var(--gold); }
+#site-footer w { color: var(--sepia); text-decoration: none; }
+#site-footer w:hover { color: var(--gold); }
 
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
