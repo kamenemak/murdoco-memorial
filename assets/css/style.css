@@ -1306,6 +1306,37 @@ section.visible {
 .nb-marco-rose--bl { bottom: -41px; left:  -21px; transform: scaleY(-1) rotate(-90deg); }
 .nb-marco-rose--br { bottom: -41px; right: -21px; transform: scale(-1,-1) rotate(-90deg); }
 
+/* ── Botones laterales (solo portrait / una hoja) ── */
+.nb-side-btn {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  background: rgba(122,26,46,0.5);
+  border: 1px solid rgba(200,162,50,0.4);
+  color: rgba(200,162,50,0.9);
+  font-size: 1.6rem;
+  width: 2.8rem;
+  height: 5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+}
+.nb-side-btn:active { background: rgba(122,26,46,0.85); }
+.nb-side-btn--prev { left: -3rem; }
+.nb-side-btn--next { right: 2rem; }
+@media (max-width: 590px) {
+  .nb-side-btn--prev { left: 1rem; }
+  .nb-side-btn--next { right: 1rem; }
+}
+
+/* Solo mostrar en portrait (una sola hoja visible) */
+@media (max-width: 700px) {
+  .nb-side-btn { display: flex; align-items: center; justify-content: center; }
+}
+
 /* ── Páginas de portada ── */
 .nb-portada { background: transparent; overflow: visible; }
 
@@ -1628,10 +1659,14 @@ section.visible {
   line-height: 1;
 }
 .names-carousel__track {
+  display: -webkit-flex;
   display: flex;
   white-space: nowrap;
+  -webkit-animation: carousel-scroll 20s linear infinite;
   animation: carousel-scroll 20s linear infinite;
   will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 .names-carousel__item {
   font-family: 'UnifrakturMaguntia', cursive;
@@ -1640,7 +1675,12 @@ section.visible {
   text-shadow: 0 0 12px rgba(200,162,50,0.3);
   letter-spacing: 0.08em;
   padding-right: 3rem;
+  -webkit-flex-shrink: 0;
   flex-shrink: 0;
+}
+@-webkit-keyframes carousel-scroll {
+  from { -webkit-transform: translateX(0); transform: translateX(0); }
+  to   { -webkit-transform: translateX(-33.333%); transform: translateX(-33.333%); }
 }
 @keyframes carousel-scroll {
   from { transform: translateX(0); }

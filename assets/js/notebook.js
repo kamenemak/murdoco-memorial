@@ -410,6 +410,10 @@ const NOTEBOOK = (() => {
       ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipPrev(); });
     document.getElementById('btn-next-page')
       ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipNext(); });
+    document.getElementById('btn-side-prev')
+      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipPrev(); });
+    document.getElementById('btn-side-next')
+      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipNext(); });
     document.getElementById('btn-refresh-doc')
       ?.addEventListener('click', e => { e.preventDefault(); load(); });
 
