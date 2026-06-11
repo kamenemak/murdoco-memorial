@@ -230,7 +230,7 @@ const NOTEBOOK = (() => {
   // ── Render ───────────────────────────────────────────────────────────
 
   function roseSvg(cls) {
-    return `<img class="nb-portada-rose ${cls}" src="assets/images/rosa-esquina.png" alt="" aria-hidden="true">`;
+    return `<img class="nb-portada-rose ${cls}" src="assets/images/rosa-esquina.webp" alt="" aria-hidden="true">`;
   }
 
   function buildDom(pageHtmls) {
