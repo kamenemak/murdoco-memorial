@@ -495,6 +495,26 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   }
 }
 
+/* ── iOS Safari fix ──────────────────────────────────────────────────────────
+   position:fixed dentro de overflow:hidden queda recortado en iOS Safari.
+   Cambiamos a position:absolute para que las nubes sean visibles.
+   @supports (-webkit-touch-callout: none) aplica SOLO en iOS WebKit.          */
+@supports (-webkit-touch-callout: none) {
+  .sky {
+    background-attachment: scroll;
+  }
+  .cloud-back-1,  .cloud-back-1-mirror,
+  .cloud-back-2,  .cloud-back-2-mirror,
+  .cloud-back-3,  .cloud-back-3-mirror,
+  .cloud-front-1, .cloud-front-1-mirror,
+  .cloud-front-2, .cloud-front-2-mirror,
+  .cloud-front-3, .cloud-front-3-mirror,
+  .cloud-front-4, .cloud-front-4-mirror,
+  .cloud-front-5, .cloud-front-5-mirror {
+    position: absolute !important;
+  }
+}
+
 /* Responsive en pantallas muy pequeñas */
 @media (max-width: 480px) {
   .cloud-back-1 {
