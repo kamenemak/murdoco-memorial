@@ -1049,44 +1049,100 @@ section.visible {
    ═══════════════════════════════════════════════════════ */
 #notebook-section {
   min-height: 100vh;
-  padding: 5rem 1rem 4rem;
-  background: linear-gradient(135deg, #1e1812 0%, #2a2018 100%);
+  padding: 5rem 1rem 6rem;
+  background:
+    /* vignette en los bordes */
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(0,0,0,0.55) 100%),
+    /* resplandor cálido central — luz de vela */
+    radial-gradient(ellipse 70% 55% at 50% 62%, rgba(184,134,11,0.13) 0%, transparent 70%),
+    linear-gradient(180deg, #111008 0%, #1c1610 40%, #181210 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0;
+  position: relative;
 }
 
-/* ── Controles (prev / indicador / next / refresh) ── */
+/* ── Separador ornamental ── */
+#notebook-section .section-sub {
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+#notebook-section .section-sub::after {
+  content: '✦  ✦  ✦';
+  display: block;
+  margin: 1.2rem auto 0;
+  font-size: 0.55rem;
+  letter-spacing: 0.6em;
+  color: rgba(184,134,11,0.5);
+  text-align: center;
+}
+
+/* ── Controles ── */
 #notebook-controls {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0;
+  margin-bottom: 1.6rem;
+  border: 1px solid rgba(184,134,11,0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.06);
 }
 #notebook-controls button {
-  background: transparent;
-  border: 1px solid rgba(245,240,232,0.25);
-  color: var(--paper);
-  width: 2.4rem; height: 2.4rem;
-  border-radius: 50%;
+  background: rgba(20,15,8,0.85);
+  border: none;
+  border-right: 1px solid rgba(184,134,11,0.2);
+  color: rgba(245,240,232,0.6);
+  width: 3rem; height: 2.8rem;
+  border-radius: 0;
   cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
-  transition: border-color 0.2s, color 0.2s;
+  font-size: 1.1rem;
+  transition: background 0.2s, color 0.2s;
   display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+#notebook-controls button:last-of-type {
+  border-right: none;
+  border-left: 1px solid rgba(184,134,11,0.2);
 }
 #notebook-controls button:hover:not(:disabled) {
-  border-color: var(--sepia);
-  color: var(--sepia);
+  background: rgba(184,134,11,0.18);
+  color: #d4a017;
 }
-#notebook-controls button:disabled { opacity: 0.3; cursor: default; }
-#btn-refresh-doc { font-size: 1.1rem !important; }
+#notebook-controls button:disabled { opacity: 0.2; cursor: default; }
+#btn-refresh-doc {
+  font-size: 0.95rem !important;
+  width: 2.5rem !important;
+  height: 2.8rem !important;
+  color: rgba(245,240,232,0.3) !important;
+  border-left: 1px solid rgba(184,134,11,0.15) !important;
+  border-right: none !important;
+  background: rgba(15,11,6,0.9) !important;
+}
+#btn-refresh-doc:hover:not(:disabled) {
+  background: rgba(184,134,11,0.08) !important;
+  color: rgba(184,134,11,0.55) !important;
+}
 #page-indicator {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: rgba(245,240,232,0.45);
-  min-width: 5rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: rgba(184,134,11,0.8);
+  min-width: 6rem;
   text-align: center;
+  padding: 0 1rem;
+  background: rgba(10,7,3,0.9);
+  height: 2.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid rgba(184,134,11,0.2);
+  border-right: 1px solid rgba(184,134,11,0.2);
 }
 
 /* ── Mesa / atril ── */
@@ -1097,28 +1153,117 @@ section.visible {
   justify-content: center;
   /* overflow DEBE ser visible para que el canvas 3D del flip no quede recortado */
   overflow: visible;
-  padding: 2rem;
-  border-radius: 12px;
+  padding: 2.8rem 2.5rem 3rem;
+  border-radius: 2px 2px 0 0;
   background:
-    radial-gradient(ellipse 60% 70% at 50% 44%, rgba(184,134,11,0.10), transparent 70%),
-    linear-gradient(160deg, #2c2118 0%, #16100b 100%);
-  box-shadow: inset 0 0 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
-  /* Perspectiva para el efecto 3D del curl */
+    /* luz de vela cálida bajo el libro */
+    radial-gradient(ellipse 60% 50% at 50% 80%, rgba(184,134,11,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(184,134,11,0.05) 0%, transparent 70%),
+    linear-gradient(180deg, #1e1912 0%, #100d08 100%);
+  /* borde superior como moldura de madera */
+  border-top: 1px solid rgba(184,134,11,0.35);
+  border-left: 1px solid rgba(184,134,11,0.12);
+  border-right: 1px solid rgba(184,134,11,0.12);
+  box-shadow:
+    inset 0 0 120px rgba(0,0,0,0.6),
+    inset 0 2px 0 rgba(255,255,255,0.04),
+    /* sombra exterior profunda */
+    0 30px 80px rgba(0,0,0,0.7),
+    0 10px 30px rgba(0,0,0,0.5);
   perspective: 2000px;
+  position: relative;
+}
+
+/* ── Moldura superior del atril ── */
+#book-container::before {
+  content: '';
+  position: absolute;
+  top: -8px; left: 0; right: 0;
+  height: 8px;
+  background: linear-gradient(to bottom,
+    rgba(100,75,40,0.0) 0%,
+    rgba(80,58,28,0.6) 50%,
+    rgba(60,42,18,0.9) 100%);
+  border-radius: 4px 4px 0 0;
+  border-top: 1px solid rgba(184,134,11,0.25);
+  border-left: 1px solid rgba(184,134,11,0.15);
+  border-right: 1px solid rgba(184,134,11,0.15);
+}
+
+/* ── Base de mesa debajo del libro ── */
+#book-container::after {
+  content: '';
+  position: absolute;
+  bottom: -18px; left: -10px; right: -10px;
+  height: 18px;
+  background: linear-gradient(to bottom,
+    #2a2015 0%,
+    #1e1810 60%,
+    #17130d 100%);
+  border-radius: 0 0 8px 8px;
+  border-bottom: 1px solid rgba(0,0,0,0.8);
+  border-left: 1px solid rgba(60,42,18,0.6);
+  border-right: 1px solid rgba(60,42,18,0.6);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+  z-index: -1;
 }
 
 /* StPageFlip gestiona width/height del #book vía inline styles */
 #book {
   position: relative;
-  /* Necesario para que el flip 3D tenga contexto de transformación */
   transform-style: preserve-3d;
 }
 
-/* ── Página ── */
+/* ── Efecto de grosor / dorso del libro ── */
+/* StPageFlip genera .stf__parent — le damos la ilusión de pila de hojas */
+.stf__parent {
+  position: relative !important;
+  /* Pila de páginas visible en el borde derecho */
+  box-shadow:
+    /* canto de hojas escalonadas */
+    2px 0   0 0   #ede8d8,
+    4px 0   0 0   #e8e3d2,
+    6px 0   0 0   #ede8d8,
+    8px 0   0 0   #e3dece,
+    10px 0  0 0   #ede8d8,
+    /* sombra de profundidad bajo el libro */
+    12px 12px 30px rgba(0,0,0,0.55),
+    -2px 12px 20px rgba(0,0,0,0.35);
+}
+
+/* Lomo izquierdo oscuro (como la encuadernación) */
+.stf__parent::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 14px;
+  background: linear-gradient(to right,
+    rgba(0,0,0,0.35) 0%,
+    rgba(0,0,0,0.12) 60%,
+    transparent 100%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Página ── */
 .nb-page {
   background: #f8f3e8;
-  /* overflow visible para que StPageFlip renderice el borde doblado del curl */
   overflow: visible;
+}
+
+/* Sombra interna en el borde del lomo de cada página */
+.nb-page__inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right,
+      rgba(0,0,0,0.08) 0%,
+      transparent 6%,
+      transparent 94%,
+      rgba(0,0,0,0.04) 100%);
+  pointer-events: none;
+  z-index: 2;
 }
 .nb-page__inner {
   width: 100%;
@@ -1182,6 +1327,49 @@ section.visible {
   font-size: 0.7rem;
   color: rgba(100,70,40,0.5);
   z-index: 2;
+}
+
+/* ── Tapa dura (primera y última página) ── */
+.nb-page--hard {
+  background: #2c1f12 !important;
+}
+.nb-page--hard .nb-page__inner {
+  background: linear-gradient(135deg, #3a2a18 0%, #2c1f12 40%, #241a0e 100%);
+  color: #e8dcc8;
+  border: none;
+}
+/* Suprime las líneas de cuaderno en la tapa */
+.nb-page--hard .nb-page__inner::before {
+  display: none;
+}
+/* Textura de cuero: patrón sutil */
+.nb-page--hard .nb-page__inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.015) 3px,
+      rgba(255,255,255,0.015) 6px
+    ),
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.04) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(0,0,0,0.2) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+/* Marco dorado decorativo en la tapa */
+.nb-page--hard .nb-page__content {
+  border: 2px solid rgba(184,134,11,0.35);
+  margin: 1rem;
+  padding: 1rem !important;
+  height: calc(100% - 2rem);
+  border-radius: 2px;
 }
 
 /* ── Lomo central en modo dos páginas ── */

@@ -232,12 +232,14 @@ const NOTEBOOK = (() => {
   function buildDom(pageHtmls) {
     const book = document.getElementById('book');
     book.innerHTML = '';
+    const last = pageHtmls.length - 1;
     pageHtmls.forEach((html, i) => {
       const div = document.createElement('div');
-      div.className = 'nb-page';
+      const isCover = i === 0 || i === last;
+      div.className = isCover ? 'nb-page nb-page--hard' : 'nb-page';
       div.innerHTML = `<div class="nb-page__inner">
         <div class="nb-page__content">${html}</div>
-        <span class="nb-page__num">${i + 1}</span>
+        ${isCover ? '' : `<span class="nb-page__num">${i + 1}</span>`}
       </div>`;
       book.appendChild(div);
     });
@@ -267,7 +269,7 @@ const NOTEBOOK = (() => {
       maxHeight: Math.round(MAX_W * RATIO),
       usePortrait:         true,
       autoSize:            true,
-      showCover:           false,
+      showCover:           true,
       drawShadow:          true,
       flippingTime:        700,
       maxShadowOpacity:    0.4,
