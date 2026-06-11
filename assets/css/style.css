@@ -495,25 +495,6 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   }
 }
 
-/* ── Mobile hero: sky + altura + nubes ── */
-@media (max-width: 768px) {
-  .sky {
-    background-attachment: scroll; /* iOS Safari no soporta fixed attachment */
-  }
-  #hero-section {
-    height: 180vh; /* en desktop 250vh tiene sentido; en móvil es excesivo */
-  }
-  /* Reducir tamaño de nubes de fondo (~60% del tamaño desktop) */
-  .cloud-back-1, .cloud-back-1-mirror { width: 230px; height: 140px; }
-  .cloud-back-2, .cloud-back-2-mirror { width: 250px; height: 155px; }
-  .cloud-back-3, .cloud-back-3-mirror { width: 215px; height: 132px; }
-  /* Reducir nubes de frente */
-  .cloud-front-1, .cloud-front-1-mirror { width: 240px; height: 150px; }
-  .cloud-front-2, .cloud-front-2-mirror { width: 255px; height: 163px; }
-  .cloud-front-4, .cloud-front-4-mirror { width: 215px; height: 138px; }
-  .cloud-front-5, .cloud-front-5-mirror { width: 235px; height: 151px; }
-}
-
 /* Responsive en pantallas muy pequeñas */
 @media (max-width: 480px) {
   .cloud-back-1 {
