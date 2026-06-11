@@ -1307,22 +1307,44 @@ section.visible {
 
 .nb-portada__inner--left {
   width: 100%; height: 100%;
-  background: #ede3cc;
+  background: linear-gradient(145deg, #e2d3b0 0%, #d4c49a 100%);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
   position: relative;
 }
+.nb-portada-frame--left {
+  position: absolute;
+  inset: 8%;
+  border: 2px solid rgba(90,16,32,0.5);
+  outline: 1px solid rgba(90,16,32,0.25);
+  outline-offset: -6px;
+  display: flex; align-items: center; justify-content: center;
+}
 .nb-portada-wm {
-  font-family: 'Dancing Script', cursive;
-  font-size: clamp(1.8rem, 5vw, 3.2rem);
-  font-weight: 700;
-  color: rgba(90, 16, 32, 0.13);
-  line-height: 1.1;
-  text-align: center;
-  transform: rotate(-18deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
   pointer-events: none;
   user-select: none;
-  white-space: nowrap;
+}
+.nb-portada-wm__line {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(1.6rem, 4.5vw, 2.8rem);
+  color: rgba(90, 16, 32, 0.55);
+  line-height: 1;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+.nb-portada-wm__line--small {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+  color: rgba(90, 16, 32, 0.4);
+}
+.nb-portada-wm__divider {
+  font-size: 0.55rem;
+  color: rgba(160, 110, 40, 0.6);
+  line-height: 1;
 }
 
 .nb-portada__inner--right {

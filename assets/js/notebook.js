@@ -241,7 +241,21 @@ const NOTEBOOK = (() => {
     const pLeft = document.createElement('div');
     pLeft.className = 'nb-page nb-page--hard nb-portada';
     pLeft.innerHTML = `<div class="nb-portada__inner nb-portada__inner--left">
-      <div class="nb-portada-wm">El<br>Sebastián<br>Antonio<br>Bobadilla</div>
+      ${roseSvg('nb-portada-rose--tl')}
+      ${roseSvg('nb-portada-rose--tr')}
+      ${roseSvg('nb-portada-rose--bl')}
+      ${roseSvg('nb-portada-rose--br')}
+      <div class="nb-portada-frame nb-portada-frame--left">
+        <div class="nb-portada-wm">
+          <div class="nb-portada-wm__line">El</div>
+          <div class="nb-portada-wm__divider">✦</div>
+          <div class="nb-portada-wm__line">Cuaderno</div>
+          <div class="nb-portada-wm__divider">✦</div>
+          <div class="nb-portada-wm__line nb-portada-wm__line--small">de</div>
+          <div class="nb-portada-wm__divider">✦</div>
+          <div class="nb-portada-wm__line">Murdoco</div>
+        </div>
+      </div>
     </div>`;
     book.appendChild(pLeft);
 
