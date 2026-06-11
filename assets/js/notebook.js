@@ -282,7 +282,11 @@ const NOTEBOOK = (() => {
     const measurer  = createMeasurer();
     const contentEl = measurer.querySelector('.page-content');
 
-    try { await document.fonts.ready; } catch (_) { /* navegadores antiguos */ }
+    // Esperar fuentes con timeout — en iOS/Safari puede no resolver nunca
+    await Promise.race([
+      document.fonts.ready.catch(() => {}),
+      new Promise(resolve => setTimeout(resolve, 3000))
+    ]);
 
     // Si por algún motivo la hoja no es medible, repartir por caracteres
     if (contentEl.clientHeight < 50) {
@@ -378,53 +382,59 @@ const NOTEBOOK = (() => {
       bookEl.appendChild(page);
     });
 
-    // Inicializar StPageFlip (siempre intenta, falla con gracia)
-    if (typeof St !== 'undefined') {
-      try {
-        const w = bookEl.offsetWidth  || bookEl.parentElement?.offsetWidth || 780;
-        const h = bookEl.offsetHeight || 520;
-        pageFlip = new St.PageFlip(bookEl, {
-          width:               w,
-          height:              h,
-          size:                'fixed',
-          usePortrait:         true,
-          showCover:           false,
-          drawShadow:          true,
-          flippingTime:        900,
-          maxShadowOpacity:    0.7,
-          showPageCorners:     true,
-          useMouseEvents:      true,
-          mobileScrollSupport: true,
-          swipeDistance:       40,
-          disableFlipByClick:  true,
-        });
-        pageFlip.loadFromHTML(bookEl.querySelectorAll('.page'));
-        pageFlip.on('flip', (e) => {
-          currentPage = e.data;
-          updatePageIndicator();
-        });
-        if (currentPage > 0 && currentPage < pages.length) {
-          pageFlip.turnToPage(currentPage);
-        }
-      } catch (err) {
-        console.warn('[Notebook] StPageFlip init falló, reintentando con observer:', err);
-        pageFlip = null;
-      }
-    }
+    updatePageIndicator();
 
-    // Si no se inicializó (sin dimensiones o CDN no cargó), reintentar cuando
-    // el libro entre al viewport
-    if (!pageFlip && pages.length > 0) {
+    // Diferir StPageFlip al siguiente ciclo de layout (doble rAF garantiza
+    // que el navegador haya calculado dimensiones reales antes de medir)
+    requestAnimationFrame(() => requestAnimationFrame(() => initPageFlip()));
+  }
+
+  function initPageFlip() {
+    if (typeof St === 'undefined' || pageFlip) return;
+
+    const w = bookEl.offsetWidth  || bookEl.parentElement?.offsetWidth || 780;
+    const h = bookEl.offsetHeight || 520;
+
+    // Si el elemento aún no tiene dimensiones reales, esperar a que sea visible
+    if (w < 50) {
       const retryObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           retryObserver.disconnect();
-          renderBook();
+          requestAnimationFrame(() => initPageFlip());
         }
       }, { threshold: 0.1 });
       retryObserver.observe(bookEl);
+      return;
     }
 
-    updatePageIndicator();
+    try {
+      pageFlip = new St.PageFlip(bookEl, {
+        width:               w,
+        height:              h,
+        size:                'fixed',
+        usePortrait:         true,
+        showCover:           false,
+        drawShadow:          true,
+        flippingTime:        900,
+        maxShadowOpacity:    0.7,
+        showPageCorners:     true,
+        useMouseEvents:      true,
+        mobileScrollSupport: true,
+        swipeDistance:       40,
+        disableFlipByClick:  true,
+      });
+      pageFlip.loadFromHTML(bookEl.querySelectorAll('.page'));
+      pageFlip.on('flip', (e) => {
+        currentPage = e.data;
+        updatePageIndicator();
+      });
+      if (currentPage > 0 && currentPage < pages.length) {
+        pageFlip.turnToPage(currentPage);
+      }
+    } catch (err) {
+      console.warn('[Notebook] StPageFlip init falló:', err);
+      pageFlip = null;
+    }
   }
 
   function updatePageIndicator() {
