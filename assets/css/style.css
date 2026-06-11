@@ -35,7 +35,8 @@
 
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; background: #080406; }
+html { scroll-behavior: smooth; background: #080406; scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
 body { font-family: var(--font-body); background: #080406; color: var(--paper); overflow-x: hidden; }
 
 /* ─── Shared ─── */
@@ -1059,7 +1060,7 @@ section.visible {
 #notebook-section {
   min-height: 100vh;
   padding: 5rem 1rem 6rem;
-  overflow-x: hidden;
+  overflow: hidden;
   overflow-anchor: none;
   background:
     radial-gradient(ellipse 100% 100% at 50% 50%, transparent 45%, rgba(0,0,0,0.7) 100%),
