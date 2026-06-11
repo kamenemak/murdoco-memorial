@@ -194,6 +194,14 @@ body { font-family: var(--font-body); background: transparent; color: var(--pape
   opacity: 1;
   will-change: opacity, transform;
 }
+/* Landscape móvil: limitar por altura para que la cara no quede cortada */
+@media (orientation: landscape) and (max-height: 500px) {
+  .murdoco-image {
+    max-width: none;
+    max-height: 82vh;
+    width: auto;
+  }
+}
 
 /* NUBES DE ADELANTE (estáticas - FRENTE de Murdoco) */
 .clouds-front {
