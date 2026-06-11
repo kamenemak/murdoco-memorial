@@ -35,8 +35,8 @@
 
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--font-body); background: transparent; color: var(--paper); overflow-x: hidden; }
+html { scroll-behavior: smooth; background: #080406; }
+body { font-family: var(--font-body); background: #080406; color: var(--paper); overflow-x: hidden; }
 
 /* ─── Shared ─── */
 .scroll-hint {
@@ -1618,6 +1618,35 @@ section.visible {
 #sync-status.error   { color: var(--rust); }
 
 /* ═══════ FOOTER ═══════ */
+/* ── Carrusel de nombres ── */
+.names-carousel {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(90deg, #0d0508 0%, #1a0a10 50%, #0d0508 100%);
+  border-top: 1px solid rgba(200,162,50,0.25);
+  border-bottom: 1px solid rgba(200,162,50,0.25);
+  line-height: 1;
+}
+.names-carousel__track {
+  display: flex;
+  white-space: nowrap;
+  animation: carousel-scroll 20s linear infinite;
+  will-change: transform;
+}
+.names-carousel__item {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  color: rgba(200,162,50,0.85);
+  text-shadow: 0 0 12px rgba(200,162,50,0.3);
+  letter-spacing: 0.08em;
+  padding-right: 3rem;
+  flex-shrink: 0;
+}
+@keyframes carousel-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+
 #site-footer {
   background: #050205;
   text-align: center;
