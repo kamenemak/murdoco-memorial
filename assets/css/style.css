@@ -1067,9 +1067,53 @@ section.visible {
   font-family: var(--font-mono); font-size: 0.85rem;
   color: rgba(245,240,232,0.5); min-width: 100px; text-align: center;
 }
-/* StPageFlip maneja perspectiva y 3D internamente */
-#book-container { display: flex; justify-content: center; margin-bottom: 1.5rem; }
-#book { position: relative; width: min(800px, 100%); height: 520px; }
+/* ── Escritorio / atril con foco de luz cálido ── */
+#book-container {
+  display: flex; justify-content: center; align-items: center;
+  margin-bottom: 1.5rem;
+  perspective: 2200px;
+  padding: 2.5rem 1.5rem;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse 65% 75% at 50% 42%, rgba(184,134,11,0.12), transparent 72%),
+    linear-gradient(160deg, #2c2118 0%, #16100b 100%);
+  box-shadow: inset 0 0 90px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* ── Tapa / encuadernación de cuero alrededor de las hojas ── */
+#book-stage {
+  position: relative;
+  display: inline-block;       /* se ajusta al ancho del libro (no colapsa) */
+  max-width: 100%;
+  padding: 14px;
+  border-radius: 5px 9px 9px 5px;
+  background: linear-gradient(135deg, #3c2c1e 0%, #241a12 60%, #1c130c 100%);
+  box-shadow:
+    /* grosor de hojas apiladas (abajo-derecha) */
+    3px 3px 0 #ece4d4, 6px 6px 0 #e0d7c5, 9px 9px 0 #d4cab6,
+    /* sombra proyectada del libro sobre la mesa */
+    14px 18px 40px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+/* brillo sutil de cuero en el borde superior de la tapa */
+#book-stage::before {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 5px 9px 9px 5px; pointer-events: none;
+  background: linear-gradient(120deg, rgba(255,255,255,0.05), transparent 30%);
+}
+
+/* ancho/alto reales los fija notebook.js; estos son respaldo en px (sin %) */
+#book { position: relative; width: 860px; max-width: 100%; height: 560px; }
+
+/* ── Lomo central (solo en modo libro abierto) ── */
+#book.two-page::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 54px; transform: translateX(-50%);
+  background: linear-gradient(to right,
+    transparent 0%, rgba(0,0,0,0.22) 42%,
+    rgba(0,0,0,0.28) 50%, rgba(0,0,0,0.22) 58%, transparent 100%);
+  pointer-events: none; z-index: 9;
+}
 
 /* ─── Página ─── */
 .page {
@@ -1165,7 +1209,7 @@ section.visible {
 .page-header .date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--sepia); font-style: italic; }
 .page-header .page-num { font-family: var(--font-mono); font-size: 0.72rem; color: rgba(139,111,71,0.6); }
 .page-content {
-  flex: 1; padding: 1rem 2rem 1.5rem 4rem; position: relative; z-index: 2;
+  flex: 1; padding: 1rem 2rem 2rem 4rem; position: relative; z-index: 2;
   overflow: hidden; font-family: var(--font-mono); font-size: 0.9rem;
   line-height: 2rem; color: var(--ink); word-break: break-word;
 }

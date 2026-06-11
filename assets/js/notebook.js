@@ -64,6 +64,24 @@ const NOTEBOOK = (() => {
   let resizeTimer  = null;
   let lastDocHtml  = '';   // para no re-renderizar si el Doc no cambió
   let isSyncing    = false; // lock para evitar applyDocHtml concurrente
+  let bookLayout   = null;  // { twoPage, pageW, pageH } calculado según ancho
+  let isTwoPage    = false; // modo actual (libro abierto vs una hoja)
+
+  /**
+   * Decide el tamaño de página y si se muestra libro abierto (2 hojas) o
+   * una sola hoja, según el ancho disponible del contenedor.
+   */
+  function getBookLayout() {
+    const cw = (bookEl.parentElement?.clientWidth)
+            || (bookEl.parentElement?.parentElement?.clientWidth)
+            || bookEl.clientWidth || 800;
+    if (cw >= 680) {
+      const pageW = Math.min(440, Math.floor((cw - 28) / 2));
+      return { twoPage: true, pageW, pageH: Math.round(pageW * 1.32) };
+    }
+    const pageW = Math.min(440, cw);
+    return { twoPage: false, pageW, pageH: Math.round(pageW * 1.4) };
+  }
 
   // Elementos DOM
   const bookEl       = document.getElementById('book');
@@ -243,8 +261,11 @@ const NOTEBOOK = (() => {
 
   /** Crea una hoja invisible con la misma estructura para medir contenido */
   function createMeasurer() {
+    const { pageW, pageH } = bookLayout || getBookLayout();
     const page = document.createElement('div');
     page.className = 'page measuring';
+    page.style.width  = pageW + 'px';
+    page.style.height = pageH + 'px';
     page.innerHTML = `
       <div class="page-lines"></div>
       <div class="page-margin"></div>
@@ -279,14 +300,23 @@ const NOTEBOOK = (() => {
    * Devuelve un array de strings HTML (una por hoja).
    */
   async function paginate(nodes) {
+    bookLayout = getBookLayout(); // fija el tamaño de hoja para esta tanda
     const measurer  = createMeasurer();
     const contentEl = measurer.querySelector('.page-content');
 
-    // Esperar fuentes con timeout — en iOS/Safari puede no resolver nunca
-    await Promise.race([
-      document.fonts.ready.catch(() => {}),
-      new Promise(resolve => setTimeout(resolve, 3000))
-    ]);
+    // Forzar la carga de la fuente del cuaderno ANTES de medir. Si se mide con
+    // una fuente fallback (más angosta), cabe más texto del que cabrá luego con
+    // la fuente real → el texto se corta. Con timeout por si la red falla.
+    try {
+      await Promise.race([
+        Promise.all([
+          document.fonts.load('0.9rem "Courier Prime"'),
+          document.fonts.load('700 0.9rem "Courier Prime"'),
+          document.fonts.ready
+        ]),
+        new Promise(resolve => setTimeout(resolve, 3000))
+      ]);
+    } catch (_) { /* navegadores antiguos */ }
 
     // Si por algún motivo la hoja no es medible, repartir por caracteres
     if (contentEl.clientHeight < 50) {
@@ -335,12 +365,52 @@ const NOTEBOOK = (() => {
     }
     flushPage();
 
+    // Pasada de verificación: re-partir cualquier hoja que TODAVÍA desborde.
+    // Red de seguridad contra cálculos erróneos por timing de fuentes/layout.
+    const verified = [];
+    for (const html of result) {
+      contentEl.innerHTML = html;
+      if (contentEl.scrollHeight <= contentEl.clientHeight + 2) {
+        verified.push(html);
+        continue;
+      }
+      // Desborda: re-empaquetar sus bloques con la medición (ya fiable)
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      const blocks = tmp.children.length ? Array.from(tmp.children) : [tmp];
+      contentEl.innerHTML = '';
+      const flush2 = (h) => {
+        const out = h !== undefined ? h : contentEl.innerHTML;
+        if (out.trim()) verified.push(out);
+        contentEl.innerHTML = '';
+      };
+      for (const node of blocks) {
+        const clone = node.cloneNode(true);
+        contentEl.appendChild(clone);
+        if (contentEl.scrollHeight > contentEl.clientHeight) {
+          contentEl.removeChild(clone);
+          if (!contentEl.innerHTML.trim()) {
+            if (clone.querySelector && clone.querySelector('img')) flush2(clone.outerHTML);
+            else splitOversizedNode(clone, contentEl, flush2);
+          } else {
+            flush2();
+            contentEl.appendChild(clone);
+            if (contentEl.scrollHeight > contentEl.clientHeight) {
+              contentEl.removeChild(clone);
+              splitOversizedNode(clone, contentEl, flush2);
+            }
+          }
+        }
+      }
+      if (contentEl.innerHTML.trim()) flush2();
+    }
+
     measurer.remove();
-    return result.length > 0 ? result : ['<p>Sin contenido</p>'];
+    return verified.length > 0 ? verified : ['<p>Sin contenido</p>'];
   }
 
   /** Respaldo: división aproximada por cantidad de caracteres */
-  function paginateByChars(nodes, charsPerPage = 900) {
+  function paginateByChars(nodes, charsPerPage = 700) {
     const result = [];
     let chunk = '';
     nodes.forEach(node => {
@@ -382,24 +452,36 @@ const NOTEBOOK = (() => {
       bookEl.appendChild(page);
     });
 
+    // Fijar dimensiones del libro de inmediato para que las hojas se vean
+    // a tamaño correcto antes de que StPageFlip tome el control
+    const lay = bookLayout || getBookLayout();
+    bookEl.style.width  = (lay.twoPage ? lay.pageW * 2 : lay.pageW) + 'px';
+    bookEl.style.height = lay.pageH + 'px';
+
     updatePageIndicator();
 
-    // Diferir StPageFlip al siguiente ciclo de layout (doble rAF garantiza
-    // que el navegador haya calculado dimensiones reales antes de medir)
+    // Diferir StPageFlip al siguiente ciclo de layout. Doble rAF para que el
+    // navegador calcule dimensiones; setTimeout como respaldo porque rAF no
+    // dispara si la pestaña está en segundo plano (preview, otra pestaña).
     requestAnimationFrame(() => requestAnimationFrame(() => initPageFlip()));
+    setTimeout(() => initPageFlip(), 120);
   }
 
   function initPageFlip() {
     if (typeof St === 'undefined' || pageFlip) return;
 
-    const w = bookEl.offsetWidth  || bookEl.parentElement?.offsetWidth || 780;
-    const h = bookEl.offsetHeight || 520;
+    const { twoPage, pageW, pageH } = bookLayout || getBookLayout();
 
-    // Si el elemento aún no tiene dimensiones reales, esperar a que sea visible
-    if (w < 50) {
+    // Reservar el tamaño del libro (StPageFlip lo ajusta luego)
+    bookEl.style.width  = (twoPage ? pageW * 2 : pageW) + 'px';
+    bookEl.style.height = pageH + 'px';
+
+    // Si aún no hay dimensiones reales, esperar a que sea visible
+    if (pageW < 50) {
       const retryObserver = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           retryObserver.disconnect();
+          bookLayout = getBookLayout();
           requestAnimationFrame(() => initPageFlip());
         }
       }, { threshold: 0.1 });
@@ -409,14 +491,14 @@ const NOTEBOOK = (() => {
 
     try {
       pageFlip = new St.PageFlip(bookEl, {
-        width:               w,
-        height:              h,
+        width:               pageW,
+        height:              pageH,
         size:                'fixed',
-        usePortrait:         true,
+        usePortrait:         !twoPage,  // libro abierto en desktop, 1 hoja en móvil
         showCover:           false,
         drawShadow:          true,
-        flippingTime:        900,
-        maxShadowOpacity:    0.7,
+        flippingTime:        800,
+        maxShadowOpacity:    0.6,
         showPageCorners:     true,
         useMouseEvents:      true,
         mobileScrollSupport: true,
@@ -428,6 +510,8 @@ const NOTEBOOK = (() => {
         currentPage = e.data;
         updatePageIndicator();
       });
+      isTwoPage = twoPage;
+      bookEl.classList.toggle('two-page', twoPage);
       if (currentPage > 0 && currentPage < pages.length) {
         pageFlip.turnToPage(currentPage);
       }
@@ -446,46 +530,23 @@ const NOTEBOOK = (() => {
   // ─── Paso de página ────────────────────────────────────────────────────────
   let isAnimating = false;
 
+  /**
+   * Navegación NATIVA de StPageFlip: flipNext/flipPrev animan el curl del papel
+   * en ambos sentidos y llevan el índice solos (un pliego en libro abierto, una
+   * hoja en móvil). El lock evita que clicks repetidos salten de más.
+   */
   function turnPage(direction) {
     if (!pageFlip || isAnimating) return;
-    const target = currentPage + direction;
-    if (target < 0 || target >= pages.length) return;
-
-    if (direction > 0) {
-      // Hacia adelante: StPageFlip tiene el curl nativo
-      pageFlip.flip(target);
-    } else {
-      // Hacia atrás: overlay CSS porque StPageFlip portrait no anima backward
-      isAnimating = true;
-      const bookContainer = bookEl.parentElement; // #book-container
-
-      // Clonar la página actual como overlay que girará
-      const sourceEl = bookEl.querySelector('.page');
-      const overlay  = document.createElement('div');
-      overlay.id = 'book-flip-back-overlay';
-      overlay.innerHTML = `
-        <div class="page-lines"></div>
-        <div class="page-margin"></div>
-        <div class="page-content" style="padding:1rem 2rem 1.5rem 4rem;font-family:var(--font-mono);font-size:0.9rem;line-height:2rem;color:var(--ink);">${pages[currentPage]}</div>
-        <div class="page-gloss-back"></div>
-      `;
-      bookEl.style.position = 'relative';
-      bookEl.appendChild(overlay);
-
-      // Cambiar la página real a la mitad de la animación (en el punto ciego ~90°)
-      setTimeout(() => {
-        pageFlip.turnToPrevPage();
-        currentPage = target;
-        updatePageIndicator();
-      }, 420);
-
-      // Limpiar el overlay al terminar
-      overlay.addEventListener('animationend', () => {
-        overlay.remove();
-        isAnimating = false;
-      }, { once: true });
-      setTimeout(() => { overlay.remove(); isAnimating = false; }, 950);
-    }
+    isAnimating = true;
+    try {
+      if (direction > 0) pageFlip.flipNext();
+      else               pageFlip.flipPrev();
+    } catch (_) {}
+    setTimeout(() => {
+      try { currentPage = pageFlip.getCurrentPageIndex(); } catch (_) {}
+      updatePageIndicator();
+      isAnimating = false;
+    }, 950);
   }
 
   // ─── Sincronización con Google Docs ────────────────────────────────────────
