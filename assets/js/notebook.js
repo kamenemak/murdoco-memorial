@@ -240,22 +240,8 @@ const NOTEBOOK = (() => {
     // ── Portada izquierda (marca de agua con nombre) ──
     const pLeft = document.createElement('div');
     pLeft.className = 'nb-page nb-page--hard nb-portada';
-    pLeft.innerHTML = `<div class="nb-portada__inner nb-portada__inner--left">
-      ${roseSvg('nb-portada-rose--tl')}
-      ${roseSvg('nb-portada-rose--tr')}
-      ${roseSvg('nb-portada-rose--bl')}
-      ${roseSvg('nb-portada-rose--br')}
-      <div class="nb-portada-frame nb-portada-frame--left">
-        <div class="nb-portada-wm">
-          <div class="nb-portada-wm__line">El</div>
-          <div class="nb-portada-wm__divider">✦</div>
-          <div class="nb-portada-wm__line">Cuaderno</div>
-          <div class="nb-portada-wm__divider">✦</div>
-          <div class="nb-portada-wm__line nb-portada-wm__line--small">de</div>
-          <div class="nb-portada-wm__divider">✦</div>
-          <div class="nb-portada-wm__line">Murdoco</div>
-        </div>
-      </div>
+    pLeft.innerHTML = `<div class="nb-portada__inner nb-portada__inner--foto">
+      <img class="nb-portada-foto" src="assets/images/SantaMuerte.jpg" alt="Santa Muerte">
     </div>`;
     book.appendChild(pLeft);
 
@@ -280,18 +266,44 @@ const NOTEBOOK = (() => {
     book.appendChild(pRight);
 
     // ── Páginas de contenido ──
-    const totalPages = pageHtmls.length + 2;
+    const totalPages = pageHtmls.length + 4;
     pageHtmls.forEach((html, i) => {
-      const pageIdx = i + 2;
       const div = document.createElement('div');
-      const isLast = pageIdx === totalPages - 1;
-      div.className = isLast ? 'nb-page nb-page--hard' : 'nb-page';
+      div.className = 'nb-page';
       div.innerHTML = `<div class="nb-page__inner">
         <div class="nb-page__content">${html}</div>
-        ${isLast ? '' : `<span class="nb-page__num">${i + 1}</span>`}
+        <span class="nb-page__num">${i + 1}</span>
       </div>`;
       book.appendChild(div);
     });
+
+    // ── Contraportada nombre con rosas (espejo de pRight) ──
+    const pBack = document.createElement('div');
+    pBack.className = 'nb-page nb-page--hard nb-portada';
+    pBack.innerHTML = `<div class="nb-portada__inner nb-portada__inner--right">
+      ${roseSvg('nb-portada-rose--tl')}
+      ${roseSvg('nb-portada-rose--tr')}
+      ${roseSvg('nb-portada-rose--bl')}
+      ${roseSvg('nb-portada-rose--br')}
+      <div class="nb-portada-frame">
+        <div class="nb-portada-name">
+          <div class="nb-portada-star-top">★</div>
+          <div class="nb-portada-name__line">SEBASTIÁN</div>
+          <div class="nb-portada-name__line nb-portada-name__line--mid">★ ANTONIO ★</div>
+          <div class="nb-portada-name__line">BOBADILLA</div>
+          <div class="nb-portada-name__line nb-portada-name__line--mid">★ RIVAS ★</div>
+        </div>
+      </div>
+    </div>`;
+    book.appendChild(pBack);
+
+    // ── Última hoja: Santa Muerte (espejo de pLeft) ──
+    const pBackLeft = document.createElement('div');
+    pBackLeft.className = 'nb-page nb-page--hard nb-portada';
+    pBackLeft.innerHTML = `<div class="nb-portada__inner nb-portada__inner--foto">
+      <img class="nb-portada-foto" src="assets/images/SantaMuerte.jpg" alt="Santa Muerte">
+    </div>`;
+    book.appendChild(pBackLeft);
 
     return totalPages;
   }
