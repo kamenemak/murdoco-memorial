@@ -337,7 +337,7 @@ const NOTEBOOK = (() => {
       flippingTime:        700,
       maxShadowOpacity:    0.4,
       showPageCorners:     true,
-      mobileScrollSupport: true,
+      mobileScrollSupport: false,
       disableFlipByClick:  false,
       swipeDistance:       25,
     });
@@ -433,11 +433,11 @@ const NOTEBOOK = (() => {
         }
       });
     document.getElementById('btn-prev-page')
-      ?.addEventListener('click', e => { e.currentTarget.blur(); pageFlip?.flipPrev(); });
+      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipPrev(); });
     document.getElementById('btn-next-page')
-      ?.addEventListener('click', e => { e.currentTarget.blur(); pageFlip?.flipNext(); });
+      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipNext(); });
     document.getElementById('btn-refresh-doc')
-      ?.addEventListener('click', e => { e.currentTarget.blur(); load(); });
+      ?.addEventListener('click', e => { e.preventDefault(); load(); });
 
     document.addEventListener('keydown', e => {
       const sec = document.getElementById('notebook-section');

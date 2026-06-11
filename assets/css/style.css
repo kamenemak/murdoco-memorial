@@ -36,7 +36,7 @@
 /* ─── Reset ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: var(--font-body); background: transparent; color: var(--paper); overflow-x: hidden; }
+body { font-family: var(--font-body); background: transparent; color: var(--paper); overflow-x: hidden; width: 102%; }
 
 /* ─── Shared ─── */
 .scroll-hint {
@@ -1059,6 +1059,7 @@ section.visible {
 #notebook-section {
   min-height: 100vh;
   padding: 5rem 1rem 6rem;
+  overflow-anchor: none;
   background:
     radial-gradient(ellipse 100% 100% at 50% 50%, transparent 45%, rgba(0,0,0,0.7) 100%),
     radial-gradient(ellipse 120% 80% at 50% 60%, rgba(122,26,46,0.35) 0%, transparent 70%),
@@ -1256,6 +1257,9 @@ section.visible {
 #book-container {
   width: 100%;
   max-width: 980px;
+  min-height: 600px;
+  contain: layout size;
+  overflow-anchor: none;
   display: flex;
   justify-content: center;
   overflow: visible;
