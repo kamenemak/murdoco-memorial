@@ -1061,8 +1061,8 @@ section.visible {
   padding: 5rem 1rem 6rem;
   background:
     radial-gradient(ellipse 100% 100% at 50% 50%, transparent 45%, rgba(0,0,0,0.7) 100%),
-    radial-gradient(ellipse 60% 50% at 50% 65%, rgba(122,26,46,0.18) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 30% at 50% 65%, rgba(200,162,50,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 120% 80% at 50% 60%, rgba(122,26,46,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 55% at 50% 60%, rgba(200,162,50,0.12) 0%, transparent 60%),
     linear-gradient(180deg, #080508 0%, #110a0d 40%, #0d080b 100%);
   display: flex;
   flex-direction: column;
@@ -1442,17 +1442,7 @@ section.visible {
 /* StPageFlip genera .stf__parent — le damos la ilusión de pila de hojas */
 .stf__parent {
   position: relative !important;
-  /* Pila de páginas visible en el borde derecho */
-  box-shadow:
-    /* canto de hojas escalonadas */
-    2px 0   0 0   #ede8d8,
-    4px 0   0 0   #e8e3d2,
-    6px 0   0 0   #ede8d8,
-    8px 0   0 0   #e3dece,
-    10px 0  0 0   #ede8d8,
-    /* sombra de profundidad bajo el libro */
-    12px 12px 30px rgba(0,0,0,0.55),
-    -2px 12px 20px rgba(0,0,0,0.35);
+  transition: box-shadow 0.4s ease;
 }
 
 /* Lomo izquierdo oscuro (como la encuadernación) */
@@ -1556,9 +1546,6 @@ section.visible {
 /* ── Tapa dura (primera y última página) ── */
 .nb-page--hard {
   background: #2c1f12 !important;
-}
-#book > div {
-  background: #2c1f12;
 }
 .nb-page--hard .nb-page__inner {
   background: linear-gradient(135deg, #3a2a18 0%, #2c1f12 40%, #241a0e 100%);

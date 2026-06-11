@@ -343,7 +343,22 @@ const NOTEBOOK = (() => {
     });
 
     pageFlip.loadFromHTML(document.querySelectorAll('#book .nb-page'));
+
+    // Fix reverso blanco de tapas duras generado por StPageFlip con inline style
+    setTimeout(() => {
+      document.querySelectorAll('#book-container div').forEach(el => {
+        if (!el.children.length || el.querySelector('.nb-page__inner, .nb-portada__inner--right, .nb-portada__inner--foto') === null) {
+          const bg = window.getComputedStyle(el).backgroundColor;
+          if (bg === 'rgb(255, 255, 255)' || bg === 'rgba(255, 255, 255, 1)') {
+            el.style.backgroundColor = '#2c1f12';
+          }
+        }
+      });
+    }, 100);
+
     pageFlip.on('flip', e => updateControls(e.data, totalPages));
+
+
     pageFlip.on('changeOrientation', e => {
       document.getElementById('book')
         .classList.toggle('nb--two-page', e.data === 'landscape');
@@ -359,6 +374,24 @@ const NOTEBOOK = (() => {
     if (ind)  ind.textContent  = `${cur + 1} / ${total}`;
     if (prev) prev.disabled    = cur === 0;
     if (next) next.disabled    = cur >= total - 1;
+
+    const shadowRight = '2px 0 0 0 #ede8d8, 4px 0 0 0 #e8e3d2, 6px 0 0 0 #ede8d8, 8px 0 0 0 #e3dece, 10px 0 0 0 #ede8d8';
+    const shadowLeft  = '-2px 0 0 0 #ede8d8, -4px 0 0 0 #e8e3d2, -6px 0 0 0 #ede8d8, -8px 0 0 0 #e3dece, -10px 0 0 0 #ede8d8';
+    const shadowDepth = '0 12px 30px rgba(0,0,0,0.55)';
+
+    const stf = document.querySelector('.stf__parent');
+    if (!stf) return;
+
+    const isFirst = cur === 0;
+    const isLast  = cur >= total - 1;
+
+    if (isFirst) {
+      stf.style.boxShadow = `${shadowRight}, ${shadowDepth}`;
+    } else if (isLast) {
+      stf.style.boxShadow = shadowDepth;
+    } else {
+      stf.style.boxShadow = `${shadowLeft}, ${shadowRight}, ${shadowDepth}`;
+    }
   }
 
   function setStatus(msg, cls) {
@@ -390,6 +423,15 @@ const NOTEBOOK = (() => {
   function init() {
     if (!document.getElementById('book')) return;
 
+    document.getElementById('btn-prev-page')
+      ?.addEventListener('mousedown', () => {
+        if (!pageFlip) return;
+        const cur = pageFlip.getCurrentPageIndex();
+        if (cur <= 1) {
+          const stf = document.querySelector('.stf__parent');
+          if (stf) stf.style.boxShadow = '0 12px 30px rgba(0,0,0,0.55)';
+        }
+      });
     document.getElementById('btn-prev-page')
       ?.addEventListener('click', e => { e.currentTarget.blur(); pageFlip?.flipPrev(); });
     document.getElementById('btn-next-page')
