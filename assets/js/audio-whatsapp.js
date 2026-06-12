@@ -9,7 +9,7 @@
 
   function formatName(filename) {
     return filename
-      .replace(/\.ogg$/i, '')
+      .replace(/(\.\w+)+$/i, '')   // quita todas las extensiones (ej: .m4a.mp4)
       .replace(/[-_]/g, ' ')
       .trim();
   }
@@ -53,7 +53,7 @@
       const res = await fetch(API);
       if (!res.ok) throw new Error(res.status);
       const data = await res.json();
-      files = data.filter(f => /\.ogg$/i.test(f.name));
+      files = data.filter(f => /\.(ogg|mp3|m4a|wav|opus|aac|mp4)$/i.test(f.name));
       renderList();
 
       // Avanza al siguiente cuando termina
