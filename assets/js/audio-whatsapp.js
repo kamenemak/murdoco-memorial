@@ -14,6 +14,14 @@
       .trim();
   }
 
+  function ytDuck(vol) {
+    try {
+      if (window.ytPlayer && typeof window.ytPlayer.setVolume === 'function') {
+        window.ytPlayer.setVolume(vol);
+      }
+    } catch (_) {}
+  }
+
   function loadTrack(index) {
     if (index < 0 || index >= files.length) return;
     currentIndex = index;
@@ -23,6 +31,7 @@
     player.src = f.download_url;
     nameEl.textContent = formatName(f.name);
     player.play();
+    ytDuck(15);
 
     document.querySelectorAll('.audio-list-item').forEach((el, i) => {
       el.classList.toggle('audio-list-item--active', i === index);
@@ -56,11 +65,16 @@
       files = data.filter(f => /\.(ogg|mp3|m4a|wav|opus|aac|mp4)$/i.test(f.name));
       renderList();
 
-      // Avanza al siguiente cuando termina
       const player = document.getElementById('audio-main-player');
       player.addEventListener('ended', () => {
-        if (currentIndex + 1 < files.length) loadTrack(currentIndex + 1);
+        if (currentIndex + 1 < files.length) {
+          loadTrack(currentIndex + 1);
+        } else {
+          ytDuck(100);
+        }
       });
+      player.addEventListener('pause', () => ytDuck(100));
+      player.addEventListener('play',  () => ytDuck(15));
     } catch (e) {
       const list = document.getElementById('audio-list');
       if (list) list.innerHTML = '<p class="audio-loading">Audios no disponibles.</p>';
