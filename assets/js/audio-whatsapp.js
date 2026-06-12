@@ -16,8 +16,9 @@
 
   function ytDuck(vol) {
     try {
-      if (window.ytPlayer && typeof window.ytPlayer.setVolume === 'function') {
-        window.ytPlayer.setVolume(vol);
+      /* ytPlayer es un let global declarado en youtube-autoplay.js */
+      if (typeof ytPlayer !== 'undefined' && ytPlayer && typeof ytPlayer.setVolume === 'function') {
+        ytPlayer.setVolume(vol);
       }
     } catch (_) {}
   }

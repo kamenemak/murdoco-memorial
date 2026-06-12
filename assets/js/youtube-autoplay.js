@@ -98,9 +98,11 @@ function desbloquearAudio() {
       ytPlayer.unMute();
       console.log('🔊 Silencio removido');
 
-      // 2. Volumen al máximo
-      ytPlayer.setVolume(100);
-      console.log('📢 Volumen al máximo (100)');
+      // 2. Volumen al máximo (solo si no hay un audio de WhatsApp sonando)
+      const whatsappPlayer = document.getElementById('audio-main-player');
+      const isDucked = whatsappPlayer && !whatsappPlayer.paused;
+      ytPlayer.setVolume(isDucked ? 15 : 100);
+      console.log('📢 Volumen:', isDucked ? '15 (ducked por audio)' : '100');
 
       // 3. Asegurar reproducción
       ytPlayer.playVideo();
