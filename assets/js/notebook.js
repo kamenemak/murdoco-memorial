@@ -256,7 +256,7 @@ const NOTEBOOK = (() => {
       <div class="nb-portada-frame">
         <div class="nb-portada-name">
           <div class="nb-portada-star-top">★</div>
-          <div class="nb-portada-name__line">SEBASTIÁN</div>
+          <div class="nb-portada-name__line">SEBASTIAN</div>
           <div class="nb-portada-name__line nb-portada-name__line--mid">★ ANTONIO ★</div>
           <div class="nb-portada-name__line">BOBADILLA</div>
           <div class="nb-portada-name__line nb-portada-name__line--mid">★ RIVAS ★</div>
@@ -288,7 +288,7 @@ const NOTEBOOK = (() => {
       <div class="nb-portada-frame">
         <div class="nb-portada-name">
           <div class="nb-portada-star-top">★</div>
-          <div class="nb-portada-name__line">SEBASTIÁN</div>
+          <div class="nb-portada-name__line">SEBASTIAN</div>
           <div class="nb-portada-name__line nb-portada-name__line--mid">★ ANTONIO ★</div>
           <div class="nb-portada-name__line">BOBADILLA</div>
           <div class="nb-portada-name__line nb-portada-name__line--mid">★ RIVAS ★</div>
