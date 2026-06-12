@@ -98,7 +98,9 @@ function desbloquearAudio() {
       ytPlayer.unMute();
       console.log('🔊 Silencio removido');
 
-      // 2. Volumen lo maneja ytDuck en audio-whatsapp.js; aquí solo se desmutea
+      // 2. Volumen fijo al 15%
+      ytPlayer.setVolume(15);
+      console.log('🔉 Volumen fijo al 15%');
 
       // 3. Asegurar reproducción
       ytPlayer.playVideo();
