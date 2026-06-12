@@ -164,8 +164,21 @@
         <h2 class="audio-title">Su Voz</h2>
         <p class="audio-sub">Mensajes de voz — como si estuviera aquí</p>
       </div>
-      <div id="audio-list" class="audio-list">
-        <p class="audio-loading">Cargando voces…</p>
+      <div class="audio-player-layout">
+        <!-- Panel izquierdo: reproductor -->
+        <div class="audio-now-playing">
+          <div class="audio-now-playing__icon" aria-hidden="true">🎙</div>
+          <p class="audio-now-playing__name" id="audio-now-name">Selecciona un audio</p>
+          <audio id="audio-main-player" controls preload="none">
+            Tu navegador no soporta audio.
+          </audio>
+        </div>
+        <!-- Panel derecho: lista -->
+        <div class="audio-list-panel">
+          <div id="audio-list" class="audio-list">
+            <p class="audio-loading">Cargando voces…</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>

@@ -4,25 +4,48 @@
   const PATH  = 'assets/audio';
   const API   = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`;
 
+  let files = [];
+  let currentIndex = -1;
+
   function formatName(filename) {
     return filename
       .replace(/\.ogg$/i, '')
       .replace(/[-_]/g, ' ')
-      .replace(/\b\w/g, c => c.toUpperCase());
+      .trim();
   }
 
-  function renderAudio(files) {
+  function loadTrack(index) {
+    if (index < 0 || index >= files.length) return;
+    currentIndex = index;
+    const f = files[index];
+    const player = document.getElementById('audio-main-player');
+    const nameEl = document.getElementById('audio-now-name');
+    player.src = f.download_url;
+    nameEl.textContent = formatName(f.name);
+    player.play();
+
+    document.querySelectorAll('.audio-list-item').forEach((el, i) => {
+      el.classList.toggle('audio-list-item--active', i === index);
+    });
+  }
+
+  function renderList() {
     const list = document.getElementById('audio-list');
     if (!files.length) {
       list.innerHTML = '<p class="audio-loading">No hay audios disponibles aún.</p>';
       return;
     }
     list.innerHTML = files.map((f, i) => `
-      <div class="audio-item">
-        <span class="audio-item__label">${formatName(f.name)}</span>
-        <audio controls preload="none" src="${f.download_url}"></audio>
-      </div>
+      <button class="audio-list-item" data-index="${i}" type="button">
+        <span class="audio-list-item__num">${String(i + 1).padStart(2, '0')}</span>
+        <span class="audio-list-item__name">${formatName(f.name)}</span>
+        <span class="audio-list-item__play" aria-hidden="true">▶</span>
+      </button>
     `).join('');
+
+    list.querySelectorAll('.audio-list-item').forEach(btn => {
+      btn.addEventListener('click', () => loadTrack(+btn.dataset.index));
+    });
   }
 
   async function loadAudios() {
@@ -30,8 +53,14 @@
       const res = await fetch(API);
       if (!res.ok) throw new Error(res.status);
       const data = await res.json();
-      const oggs = data.filter(f => /\.ogg$/i.test(f.name));
-      renderAudio(oggs);
+      files = data.filter(f => /\.ogg$/i.test(f.name));
+      renderList();
+
+      // Avanza al siguiente cuando termina
+      const player = document.getElementById('audio-main-player');
+      player.addEventListener('ended', () => {
+        if (currentIndex + 1 < files.length) loadTrack(currentIndex + 1);
+      });
     } catch (e) {
       const list = document.getElementById('audio-list');
       if (list) list.innerHTML = '<p class="audio-loading">Audios no disponibles.</p>';
