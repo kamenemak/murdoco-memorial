@@ -12,9 +12,12 @@ const NOTEBOOK = (() => {
   const PAD_X = 48;   // left(24) + right(24)
   const PAD_Y = 72;   // top(24) + bottom(48) — bottom leaves room for page number
 
-  let pageFlip   = null;
-  let lastHtml   = '';
-  let lastBucket = '';
+  let pageFlip      = null;
+  let lastHtml      = '';
+  let lastBucket    = '';
+  let currentPage   = 0;
+  let totalPagesG   = 0;
+  let isPortrait    = false;
 
   // ── Helpers ─────────────────────────────────────────────────────────
 
@@ -25,7 +28,7 @@ const NOTEBOOK = (() => {
     const twoPage = avail >= MIN_W * 2;
     const w = Math.min(MAX_W, Math.max(MIN_W, twoPage ? Math.floor(avail / 2) : avail));
     const h = Math.round(w * RATIO);
-    return { w, h, bucket: `${twoPage}:${Math.round(w / 20)}` };
+    return { w, h, twoPage, bucket: `${twoPage}:${Math.round(w / 20)}` };
   }
 
   // ── Fetch ────────────────────────────────────────────────────────────
@@ -356,10 +359,17 @@ const NOTEBOOK = (() => {
       });
     }, 100);
 
-    pageFlip.on('flip', e => updateControls(e.data, totalPages));
+    currentPage = 0;
+    totalPagesG = totalPages;
+    isPortrait  = !pageSize().twoPage;
 
+    pageFlip.on('flip', e => {
+      currentPage = e.data;
+      updateControls(currentPage, totalPages);
+    });
 
     pageFlip.on('changeOrientation', e => {
+      isPortrait = e.data === 'portrait';
       document.getElementById('book')
         .classList.toggle('nb--two-page', e.data === 'landscape');
     });
@@ -406,14 +416,21 @@ const NOTEBOOK = (() => {
   function init() {
     if (!document.getElementById('book')) return;
 
-    document.getElementById('btn-prev-page')
-      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipPrev(); });
-    document.getElementById('btn-next-page')
-      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipNext(); });
-    document.getElementById('btn-side-prev')
-      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipPrev(); });
-    document.getElementById('btn-side-next')
-      ?.addEventListener('click', e => { e.preventDefault(); pageFlip?.flipNext(); });
+    const goNext = e => {
+      e.preventDefault();
+      if (!pageFlip) return;
+      isPortrait ? pageFlip.flip(currentPage + 1) : pageFlip.flipNext();
+    };
+    const goPrev = e => {
+      e.preventDefault();
+      if (!pageFlip) return;
+      isPortrait ? pageFlip.flip(currentPage - 1) : pageFlip.flipPrev();
+    };
+
+    document.getElementById('btn-prev-page')?.addEventListener('click', goPrev);
+    document.getElementById('btn-next-page')?.addEventListener('click', goNext);
+    document.getElementById('btn-side-prev')?.addEventListener('click', goPrev);
+    document.getElementById('btn-side-next')?.addEventListener('click', goNext);
     document.getElementById('btn-refresh-doc')
       ?.addEventListener('click', e => { e.preventDefault(); load(); });
 
@@ -422,8 +439,8 @@ const NOTEBOOK = (() => {
       if (!sec) return;
       const rect = sec.getBoundingClientRect();
       if (rect.top > window.innerHeight || rect.bottom < 0) return;
-      if (e.key === 'ArrowRight') pageFlip?.flipNext();
-      if (e.key === 'ArrowLeft')  pageFlip?.flipPrev();
+      if (e.key === 'ArrowRight' && pageFlip) isPortrait ? pageFlip.flip(currentPage + 1) : pageFlip.flipNext();
+      if (e.key === 'ArrowLeft'  && pageFlip) isPortrait ? pageFlip.flip(currentPage - 1) : pageFlip.flipPrev();
     });
 
     // Re-paginate on significant resize
