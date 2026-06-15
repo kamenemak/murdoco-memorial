@@ -2,7 +2,7 @@
 
 Un memorial web interactivo con galería de fotos, música de YouTube y mensajes especiales para recordar a Sebastian Antonio Bobadilla Rivas.
 
-**Sitio en vivo:** https://your-github-username.github.io/murdoco-memorial
+**Sitio en vivo:** [https://your-github-username.github.io/murdoco-memorial](https://kamenemak.github.io/murdoco-memorial/)
 
 ---
 
