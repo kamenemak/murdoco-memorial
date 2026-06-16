@@ -962,6 +962,17 @@ section.visible {
   box-shadow: 0 0 20px rgba(184,134,11,0.3);
 }
 
+#gallery-see-all {
+  position: absolute; bottom: 4.4rem; left: 50%; transform: translateX(-50%);
+  z-index: 3; color: rgba(245,240,232,0.65); text-decoration: none;
+  font-family: var(--font-mono); font-size: 0.78rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border-bottom: 1px solid rgba(184,134,11,0.35);
+  padding-bottom: 0.2rem;
+  transition: color 0.3s, border-color 0.3s;
+}
+#gallery-see-all:hover { color: var(--gold); border-color: var(--gold); }
+
 /* ═══════════════════════════════════════════════════════
    MÚSICA
    ═══════════════════════════════════════════════════════ */

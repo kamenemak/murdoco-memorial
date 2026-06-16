@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galería completa — Murdoco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=UnifrakturMaguntia&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&family=Courier+Prime:ital@0;1&family=Cinzel:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="stylesheet" href="assets/css/gallery-full.css"/>
+</head>
+<body>
+
+  <section id="gfull-page">
+    <div class="gfull-header">
+      <a class="gfull-back" href="index.html#gallery-section">&#8592; Volver al memorial</a>
+      <h1 class="section-eyebrow">Toda la Galería</h1>
+      <p class="section-sub">Cada recuerdo, una foto a la vez</p>
+    </div>
+
+    <p id="gfull-status"></p>
+
+    <div id="gfull-grid" class="gfull-grid"></div>
+    <div id="gfull-sentinel"></div>
+  </section>
+
+  <!-- Lightbox -->
+  <div id="gfull-lightbox">
+    <button type="button" id="gfull-lb-close" aria-label="Cerrar">&#10005;</button>
+    <button type="button" id="gfull-lb-prev" class="gfull-lb-arrow" aria-label="Anterior">&#8592;</button>
+    <button type="button" id="gfull-lb-next" class="gfull-lb-arrow" aria-label="Siguiente">&#8594;</button>
+    <div class="gfull-lb-figure">
+      <div id="gfull-lb-spinner"></div>
+      <img id="gfull-lb-img" alt="">
+      <div class="gfull-lb-caption">
+        <span id="gfull-lb-title"></span>
+        <span id="gfull-lb-counter"></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="assets/js/gallery-full.js"></script>
+</body>
+</html>
