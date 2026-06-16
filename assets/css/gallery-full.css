@@ -89,10 +89,38 @@
   color: rgba(192,57,43,0.6); font-size: 1.4rem;
 }
 
-#gfull-sentinel {
-  height: 1px;
+#gfull-load-more-wrap {
   max-width: 1280px;
-  margin: 2rem auto 0;
+  margin: 2.4rem auto 0;
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+}
+
+#gfull-load-more {
+  background: rgba(184,134,11,0.08);
+  border: 1.5px solid rgba(184,134,11,0.4);
+  color: var(--paper);
+  padding: 0.75rem 2rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+}
+#gfull-load-more:hover {
+  background: rgba(184,134,11,0.2);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 20px rgba(184,134,11,0.25);
+}
+
+#gfull-remaining-count {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: rgba(245,240,232,0.4);
+  letter-spacing: 0.05em;
 }
 
 /* ── Lightbox ── */

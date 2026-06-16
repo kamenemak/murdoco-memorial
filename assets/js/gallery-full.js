@@ -35,9 +35,11 @@ const GALLERY_FULL = (() => {
   const loadedSrc = new Map();
 
   // ── DOM ─────────────────────────────────────────────────────────
-  const grid       = document.getElementById('gfull-grid');
-  const sentinel    = document.getElementById('gfull-sentinel');
-  const statusEl    = document.getElementById('gfull-status');
+  const grid          = document.getElementById('gfull-grid');
+  const loadMoreWrap  = document.getElementById('gfull-load-more-wrap');
+  const loadMoreBtn   = document.getElementById('gfull-load-more');
+  const remainingEl   = document.getElementById('gfull-remaining-count');
+  const statusEl      = document.getElementById('gfull-status');
   const lightbox    = document.getElementById('gfull-lightbox');
   const lbImg       = document.getElementById('gfull-lb-img');
   const lbCounter   = document.getElementById('gfull-lb-counter');
@@ -105,7 +107,7 @@ const GALLERY_FULL = (() => {
   // ── Render de cards en lotes ────────────────────────────────────
   function renderNextBatch() {
     if (renderedUpTo >= files.length) {
-      sentinel.style.display = 'none';
+      loadMoreWrap.style.display = 'none';
       return;
     }
     const slice = files.slice(renderedUpTo, renderedUpTo + BATCH_SIZE);
@@ -115,7 +117,17 @@ const GALLERY_FULL = (() => {
     });
     renderedUpTo += slice.length;
 
-    if (renderedUpTo >= files.length) sentinel.style.display = 'none';
+    updateLoadMoreUI();
+  }
+
+  function updateLoadMoreUI() {
+    const remaining = files.length - renderedUpTo;
+    if (remaining <= 0) {
+      loadMoreWrap.style.display = 'none';
+    } else {
+      loadMoreWrap.style.display = '';
+      remainingEl.textContent = `${remaining} foto${remaining === 1 ? '' : 's'} más`;
+    }
   }
 
   function buildCard(file, idx) {
@@ -165,10 +177,6 @@ const GALLERY_FULL = (() => {
     }
   }
 
-  // ── Sentinel: dispara el siguiente lote al acercarse al final ───
-  const sentinelObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) renderNextBatch();
-  }, { rootMargin: '600px 0px' });
 
   // ── Lightbox ─────────────────────────────────────────────────────
   function openLightbox(idx) {
@@ -261,13 +269,13 @@ const GALLERY_FULL = (() => {
 
     if (files.length === 0) {
       statusEl.textContent = 'Aún no hay fotos en la galería.';
-      sentinel.style.display = 'none';
+      loadMoreWrap.style.display = 'none';
       return;
     }
 
     statusEl.textContent = '';
     bindLightboxEvents();
-    sentinelObserver.observe(sentinel);
+    loadMoreBtn.addEventListener('click', renderNextBatch);
     renderNextBatch();
   }
 
