@@ -10,7 +10,7 @@
 
   // Padding inside each page (must match CSS .page__inner padding)
   const PAD_X = 48;   // left(24) + right(24)
-  const PAD_Y = 72;   // top(24) + bottom(48) — bottom leaves room for page number
+  const PAD_Y = 56;   // top(24) + bottom(32) — bottom leaves room for page number
 
   let pageFlip      = null;
   let lastHtml      = '';
@@ -24,7 +24,16 @@
 
   function pageSize() {
     const ctr = document.getElementById('book-container');
-    let avail = ctr ? (ctr.clientWidth - 64) : (window.innerWidth - 80);
+    let avail;
+    if (ctr) {
+      // clientWidth incluye el padding; restamos el padding real para obtener
+      // el ancho útil, así se adapta si cambia el padding en el CSS.
+      const cs  = getComputedStyle(ctr);
+      const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      avail = ctr.clientWidth - pad;
+    } else {
+      avail = window.innerWidth - 80;
+    }
     if (avail < 50) avail = window.innerWidth - 80;
     const twoPage = avail >= MIN_W * 2;
     const w = Math.min(MAX_W, Math.max(MIN_W, twoPage ? Math.floor(avail / 2) : avail));
@@ -81,8 +90,19 @@
 
   async function paginate(blocks) {
     const { w, h } = pageSize();
-    const cW = w - PAD_X;
-    const cH = h - PAD_Y;
+    let cW = w - PAD_X;
+    let cH = h - PAD_Y;
+
+    // Si ya hay una hoja renderizada, medir contra su tamaño REAL en vez del
+    // calculado: StPageFlip puede estirar/encoger la hoja y el alto efectivo
+    // diferir del teórico, lo que hacía que el texto se cortara abajo.
+    const realContent = document.querySelector('#book .nb-page__content');
+    if (realContent && realContent.clientHeight > 40) {
+      cW = realContent.clientWidth;
+      cH = realContent.clientHeight;
+    }
+    cH -= 18;   // margen de seguridad: garantiza que el contenido sea más
+                // corto que la hoja, para que el centrado vertical no recorte
 
     const measurer = document.createElement('div');
     measurer.id = '__nb_measurer';
