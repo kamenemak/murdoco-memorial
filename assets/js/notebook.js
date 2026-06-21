@@ -35,74 +35,41 @@ const NOTEBOOK = (() => {
 
   const PUB_URL = 'https://docs.google.com/document/d/e/2PACX-1vQzq57f9HHTAErCHk8daedFGSsTa06yYmZ03hPBP2oYb2DQ1IdYLSlBpp9eHAcVfHkK_DYEgNfcmplP/pub';
 
+  let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyB1UKUjmFz5lyrbom-t8S4bmh0h_n72rb1LO9sn7SjcPvXkUPlX87fXH3GZ-NjRJX/exec';
+
   async function fetchDoc() {
-    const r = await fetch(PROXY + encodeURIComponent(PUB_URL), { cache: 'no-cache' });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    if (!data.contents) throw new Error('Respuesta vacía del proxy');
-    return data.contents;
+    return new Promise((resolve, reject) => {
+      const cbName = '__nb_cb_' + Date.now();
+      const script = document.createElement('script');
+      const timer = setTimeout(() => {
+        window[cbName] = () => {};   // no-op: deja el callback vivo por si llega tarde
+        script.remove();
+        reject(new Error('JSONP timeout'));
+      }, 60000);
+
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[cbName];
+        script.remove();
+      }
+
+      window[cbName] = html => {
+        cleanup();
+        if (html && html.length > 100) resolve(html);
+        else reject(new Error('Respuesta vacía'));
+      };
+
+      script.onerror = () => { cleanup(); reject(new Error('JSONP error')); };
+      script.src = APPS_SCRIPT_URL + '?callback=' + cbName;
+      document.head.appendChild(script);
+    });
   }
 
   // ── Parse ────────────────────────────────────────────────────────────
 
   function parseBlocks(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
-
-    // Map Google's CSS classes to bold/italic/underline
-    const fmtMap = {};
-    doc.querySelectorAll('style').forEach(s => {
-      const re = /\.([\w-]+)\s*\{([^}]*)\}/g;
-      let m;
-      while ((m = re.exec(s.textContent || ''))) {
-        const cls = m[1], r = m[2];
-        fmtMap[cls] = fmtMap[cls] || {};
-        if (/font-weight\s*:\s*(700|bold)/i.test(r))    fmtMap[cls].b = true;
-        if (/font-style\s*:\s*italic/i.test(r))         fmtMap[cls].i = true;
-        if (/text-decoration\s*:\s*underline/i.test(r)) fmtMap[cls].u = true;
-      }
-    });
-
-    const root = doc.querySelector('#contents') || doc.body;
-
-    // Apply semantic tags for formatting
-    root.querySelectorAll('[class]').forEach(el => {
-      let b = false, i = false, u = false;
-      el.classList.forEach(c => {
-        const s = fmtMap[c];
-        if (s) { b = b || !!s.b; i = i || !!s.i; u = u || !!s.u; }
-      });
-      if ((b || i || u) && el.textContent.trim()) {
-        let inner = el.innerHTML;
-        if (u) inner = `<u>${inner}</u>`;
-        if (i) inner = `<em>${inner}</em>`;
-        if (b && !/^H[1-6]$/.test(el.tagName)) inner = `<strong>${inner}</strong>`;
-        el.innerHTML = inner;
-      }
-    });
-
-    root.querySelectorAll('[style],[class],[id]').forEach(el => {
-      el.removeAttribute('style');
-      el.removeAttribute('class');
-      el.removeAttribute('id');
-    });
-
-    root.querySelectorAll('a[href]').forEach(a => {
-      try {
-        const u = new URL(a.href);
-        if (u.hostname.endsWith('google.com') && u.pathname === '/url') {
-          a.setAttribute('href', u.searchParams.get('q') || a.href);
-        }
-      } catch (_) {}
-      a.setAttribute('target', '_blank');
-      a.setAttribute('rel', 'noopener');
-    });
-
-    root.querySelectorAll('img').forEach(img => {
-      img.removeAttribute('width');
-      img.removeAttribute('height');
-    });
-
-    return Array.from(root.children).filter(n => {
+    return Array.from(doc.body.children).filter(n => {
       if (n.tagName === 'HR') return true;
       if (n.querySelector && n.querySelector('img')) return true;
       return (n.textContent || '').trim().length > 0;
@@ -163,7 +130,6 @@ const NOTEBOOK = (() => {
       }
 
       // Doesn't fit — close current page and try block alone
-      const prev = current;
       flush();
       measurer.innerHTML = html;
 
@@ -172,10 +138,8 @@ const NOTEBOOK = (() => {
         continue;
       }
 
-      if (prev.trim()) pages.push(prev);   // push what was accumulated
-
-      // Bloque con imagen: no se puede dividir por palabras, va solo en su página
-      if (block.querySelector && block.querySelector('img')) {
+      // Bloque con imagen (suelta o envuelta en párrafo): va sola en su página
+      if (block.tagName === 'IMG' || (block.querySelector && block.querySelector('img'))) {
         flush(html);
         continue;
       }
