@@ -86,16 +86,16 @@
     const measurer = document.createElement('div');
     measurer.id = '__nb_measurer';
     measurer.style.cssText = [
-      'position:fixed', 'left:-9999px', 'top:0',
+      'position:absolute', 'left:-9999px', 'top:0', 'visibility:hidden',
       `width:${cW}px`, `height:${cH}px`,
       'overflow:hidden', 'box-sizing:border-box',
       "font-family:'Georgia',serif", 'font-size:0.92rem', 'line-height:1.75',
       'word-break:break-word',
     ].join(';');
-    // Inyectar el mismo límite de imagen que el CSS de las páginas reales,
-    // para que la paginación mida el tamaño correcto y las imágenes quepan con texto.
     const measurerStyle = document.createElement('style');
-    measurerStyle.textContent = '#__nb_measurer img{max-width:55%;max-height:160px;object-fit:contain;display:block;}';
+    // Forzamos height explícito en imágenes para que el measurer las cuente correctamente
+    // antes de que el navegador las pinte (evita que Safari iOS las mida en 0px)
+    measurerStyle.textContent = '#__nb_measurer img{width:55%;height:160px;max-width:55%;max-height:160px;object-fit:contain;display:block;}';
     document.head.appendChild(measurerStyle);
     document.body.appendChild(measurer);
 
@@ -269,7 +269,22 @@
     return totalPages;
   }
 
-  function mount(pageHtmls) {
+  // Espera a que todas las imágenes del libro estén decodificadas para que
+  // StPageFlip las mida bien al inicializar (sin esto, las imágenes base64
+  // recién agregadas se ignoran hasta un resize). Más fiable que un setTimeout fijo.
+  async function waitForImages(container) {
+    const imgs = Array.from(container.querySelectorAll('img'));
+    await Promise.all(imgs.map(img => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      if (img.decode) return img.decode().catch(() => {});
+      return new Promise(res => {
+        img.addEventListener('load',  res, { once: true });
+        img.addEventListener('error', res, { once: true });
+      });
+    }));
+  }
+
+  async function mount(pageHtmls) {
     if (pageFlip) { try { pageFlip.destroy(); } catch (_) {} pageFlip = null; }
 
     // StPageFlip.destroy() remueve el #book del DOM — recrearlo si hace falta
@@ -280,6 +295,9 @@
     }
 
     const totalPages = buildDom(pageHtmls);
+
+    // Asegura que las imágenes estén listas antes de inicializar StPageFlip
+    await waitForImages(document.getElementById('book'));
 
     const { w, h } = pageSize();
 
