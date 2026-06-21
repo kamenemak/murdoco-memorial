@@ -18,6 +18,7 @@
   let currentPage   = 0;
   let totalPagesG   = 0;
   let isPortrait    = false;
+  let didFirstFit   = false;   // re-paginación automática solo en la primera carga
 
   // ── Helpers ─────────────────────────────────────────────────────────
 
@@ -367,6 +368,15 @@
     })));
   }
 
+  // Re-pagina y re-monta usando el HTML ya cargado. Es lo mismo que pulsar
+  // "recargar", pero sin volver a pedir el documento.
+  async function repaginate() {
+    if (!lastHtml) return;
+    const blocks = parseBlocks(lastHtml);
+    const pages  = await paginate(blocks);
+    mount(pages);
+  }
+
   async function load() {
     setStatus('Cargando cuaderno…', 'loading');
     try {
@@ -377,6 +387,15 @@
       const pages  = await paginate(blocks);
       mount(pages);
       setStatus('', '');
+
+      // El contenedor puede no estar en su tamaño definitivo en la primera
+      // carga, lo que produce menos páginas de las debidas. Una vez que el
+      // layout, las fuentes y las imágenes están estables, re-paginamos una
+      // sola vez para acomodar todo (equivale a pulsar "recargar").
+      if (!didFirstFit) {
+        didFirstFit = true;
+        requestAnimationFrame(() => requestAnimationFrame(() => { repaginate(); }));
+      }
     } catch (err) {
       console.error('[Notebook]', err);
       setStatus('No se pudo cargar el cuaderno. Verifica que el Doc sea público.', 'error');
