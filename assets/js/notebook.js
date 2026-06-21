@@ -33,16 +33,10 @@ const NOTEBOOK = (() => {
 
   // ── Fetch ────────────────────────────────────────────────────────────
 
+  const PUB_URL = 'https://docs.google.com/document/d/e/2PACX-1vQzq57f9HHTAErCHk8daedFGSsTa06yYmZ03hPBP2oYb2DQ1IdYLSlBpp9eHAcVfHkK_DYEgNfcmplP/pub';
+
   async function fetchDoc() {
-    if (API_KEY) {
-      try {
-        const url = `https://www.googleapis.com/drive/v3/files/${DOC_ID}/export?mimeType=text/html&key=${API_KEY}`;
-        const r = await fetch(url, { cache: 'no-cache' });
-        if (r.ok) return r.text();
-      } catch (_) {}
-    }
-    const exportUrl = `https://docs.google.com/document/d/${DOC_ID}/export?format=html`;
-    const r = await fetch(PROXY + encodeURIComponent(exportUrl), { cache: 'no-cache' });
+    const r = await fetch(PROXY + encodeURIComponent(PUB_URL), { cache: 'no-cache' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
     if (!data.contents) throw new Error('Respuesta vacía del proxy');
