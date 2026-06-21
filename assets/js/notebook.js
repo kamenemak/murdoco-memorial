@@ -269,22 +269,7 @@
     return totalPages;
   }
 
-  // Espera a que todas las imágenes del libro estén decodificadas para que
-  // StPageFlip las mida bien al inicializar (sin esto, las imágenes base64
-  // recién agregadas se ignoran hasta un resize). Más fiable que un setTimeout fijo.
-  async function waitForImages(container) {
-    const imgs = Array.from(container.querySelectorAll('img'));
-    await Promise.all(imgs.map(img => {
-      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-      if (img.decode) return img.decode().catch(() => {});
-      return new Promise(res => {
-        img.addEventListener('load',  res, { once: true });
-        img.addEventListener('error', res, { once: true });
-      });
-    }));
-  }
-
-  async function mount(pageHtmls) {
+  function mount(pageHtmls) {
     if (pageFlip) { try { pageFlip.destroy(); } catch (_) {} pageFlip = null; }
 
     // StPageFlip.destroy() remueve el #book del DOM — recrearlo si hace falta
@@ -295,9 +280,6 @@
     }
 
     const totalPages = buildDom(pageHtmls);
-
-    // Asegura que las imágenes estén listas antes de inicializar StPageFlip
-    await waitForImages(document.getElementById('book'));
 
     const { w, h } = pageSize();
 
