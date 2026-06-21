@@ -19,6 +19,7 @@
   let totalPagesG   = 0;
   let isPortrait    = false;
   let didFirstFit   = false;   // re-paginación automática solo en la primera carga
+  let sliderDragging = false;  // true mientras el usuario arrastra el slider de hojas
 
   // ── Helpers ─────────────────────────────────────────────────────────
 
@@ -357,13 +358,19 @@
   }
 
   function updateControls(cur, total) {
-    const ind  = document.getElementById('page-indicator');
-    const prev = document.getElementById('btn-prev-page');
-    const next = document.getElementById('btn-next-page');
+    const ind    = document.getElementById('page-indicator');
+    const prev   = document.getElementById('btn-prev-page');
+    const next   = document.getElementById('btn-next-page');
+    const slider = document.getElementById('page-slider');
     if (ind)  ind.textContent  = `${cur + 1} / ${total}`;
     if (prev) prev.disabled    = cur === 0;
     if (next) next.disabled    = cur >= total - 1;
-
+    if (slider) {
+      slider.max      = String(Math.max(0, total - 1));
+      slider.disabled = total <= 1;
+      // No sobrescribir mientras el usuario arrastra el slider
+      if (!sliderDragging) slider.value = String(cur);
+    }
   }
 
   function setStatus(msg, cls) {
@@ -444,6 +451,23 @@
     document.getElementById('btn-side-next')?.addEventListener('click', goNext);
     document.getElementById('btn-refresh-doc')
       ?.addEventListener('click', e => { e.preventDefault(); load(); });
+
+    // Slider para saltar rápido a cualquier hoja
+    const slider = document.getElementById('page-slider');
+    if (slider) {
+      const goTo = () => {
+        if (!pageFlip) return;
+        const target = parseInt(slider.value, 10) || 0;
+        if (target === currentPage) return;
+        try { pageFlip.turnToPage(target); } catch (_) { try { pageFlip.flip(target); } catch (_) {} }
+        currentPage = target;
+        updateControls(currentPage, totalPagesG);
+      };
+      slider.addEventListener('pointerdown', () => { sliderDragging = true; });
+      slider.addEventListener('input', goTo);                        // salto en vivo al arrastrar
+      slider.addEventListener('change', () => { sliderDragging = false; goTo(); });
+      slider.addEventListener('pointerup', () => { sliderDragging = false; });
+    }
 
     document.addEventListener('keydown', e => {
       const sec = document.getElementById('notebook-section');
