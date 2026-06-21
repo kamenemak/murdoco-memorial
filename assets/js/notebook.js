@@ -354,11 +354,25 @@
 
   // ── Load / Reload ────────────────────────────────────────────────────
 
+  // Precarga y decodifica todas las imágenes del HTML antes de paginar/montar,
+  // para que StPageFlip las mida correctamente desde la primera carga
+  // (sin esto, las imágenes solo aparecen tras pulsar "recargar").
+  async function preloadImages(html) {
+    const doc  = new DOMParser().parseFromString(html, 'text/html');
+    const srcs = Array.from(doc.querySelectorAll('img')).map(i => i.getAttribute('src')).filter(Boolean);
+    await Promise.all(srcs.map(src => new Promise(res => {
+      const img = new Image();
+      img.onload = img.onerror = () => res();
+      img.src = src;
+    })));
+  }
+
   async function load() {
     setStatus('Cargando cuaderno…', 'loading');
     try {
       const html   = await fetchDoc();
       lastHtml     = html;
+      await preloadImages(html);
       const blocks = parseBlocks(html);
       const pages  = await paginate(blocks);
       mount(pages);
