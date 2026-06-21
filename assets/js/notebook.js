@@ -1,4 +1,4 @@
-const NOTEBOOK = (() => {
+﻿const NOTEBOOK = (() => {
   'use strict';
 
   const DOC_ID  = (typeof config !== 'undefined') ? String(config.googleDocsId  || '').trim() : '';
@@ -69,11 +69,11 @@ const NOTEBOOK = (() => {
 
   function parseBlocks(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    return Array.from(doc.body.children).filter(n => {
-      if (n.tagName === 'HR') return true;
-      if (n.querySelector && n.querySelector('img')) return true;
-      return (n.textContent || '').trim().length > 0;
-    });
+    const blocks = [];
+    for (const n of doc.body.children) {
+      blocks.push(n);
+    }
+    return blocks;
   }
 
   // ── Paginate ─────────────────────────────────────────────────────────
@@ -144,29 +144,29 @@ const NOTEBOOK = (() => {
         continue;
       }
 
-      // Block itself overflows — split word by word
+      // Block itself overflows — split word by word preserving <br>
       const tag   = /^H[1-6]$/.test(block.tagName) ? block.tagName.toLowerCase() : 'p';
-      // Usar innerHTML con espacios en los tags de cierre para evitar
-      // que spans adyacentes sin espacio se concatenen ("tengoHola")
+      const BR_TOKEN = '||BR||';
       const words = block.innerHTML
-        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/<br\s*\/?>/gi, ' ' + BR_TOKEN + ' ')
         .replace(/<\/\w+>/g, ' ')
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
         .split(/\s+/).filter(Boolean);
       let   chunk  = [];
 
+      const joinChunk = c => c.join(' ').replace(/\|\|BR\|\|/g, '<br>');
       for (const word of words) {
         chunk.push(word);
-        measurer.innerHTML = `<${tag}>${chunk.join(' ')}</${tag}>`;
+        measurer.innerHTML = `<${tag}>${joinChunk(chunk)}</${tag}>`;
         if (!fits() && chunk.length > 1) {
           chunk.pop();
-          flush(`<${tag}>${chunk.join(' ')}</${tag}>`);
+          flush(`<${tag}>${joinChunk(chunk)}</${tag}>`);
           chunk = [word];
-          measurer.innerHTML = `<${tag}>${chunk.join(' ')}</${tag}>`;
+          measurer.innerHTML = `<${tag}>${joinChunk(chunk)}</${tag}>`;
         }
       }
-      current = chunk.length ? `<${tag}>${chunk.join(' ')}</${tag}>` : '';
+      current = chunk.length ? `<${tag}>${joinChunk(chunk)}</${tag}>` : '';
     }
 
     flush();
