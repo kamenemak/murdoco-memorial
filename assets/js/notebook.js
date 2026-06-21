@@ -140,33 +140,30 @@
       current = '';
     };
 
-    for (const block of blocks) {
-      if (block.tagName === 'HR') { flush(); continue; }
+    const blockHasImg = b => b.tagName === 'IMG' || (b.querySelector && b.querySelector('img'));
+    const isEmpty     = b => !blockHasImg(b) && !(b.textContent || '').trim();
 
+    // Cada bloque (párrafo, encabezado o imagen) va en SU PROPIA hoja, para
+    // que cada salto/mensaje del documento quede claramente separado.
+    // SALVEDAD: si a un párrafo le sigue una imagen, se agrupan en la misma hoja.
+    // Los párrafos vacíos (Enter en blanco del doc) se ignoran.
+    for (let bi = 0; bi < blocks.length; bi++) {
+      const block = blocks[bi];
+      if (block.tagName === 'HR') continue;   // los HR ya no separan: cada bloque es su hoja
+      if (isEmpty(block)) continue;
+
+      const hasImg = blockHasImg(block);
       const html = block.outerHTML || '';
-      measurer.innerHTML = current + html;
 
-      if (fits()) {
-        current += html;
-        continue;
-      }
+      // Imagen: una hoja para ella sola
+      if (hasImg) { flush(html); continue; }
 
-      // Doesn't fit — close current page and try block alone
-      flush();
+      // ¿Cabe el bloque completo en una hoja?
       measurer.innerHTML = html;
+      if (fits()) { flush(html); continue; }
 
-      if (fits()) {
-        current = html;
-        continue;
-      }
-
-      // Bloque con imagen (suelta o envuelta en párrafo): va sola en su página
-      if (block.tagName === 'IMG' || (block.querySelector && block.querySelector('img'))) {
-        flush(html);
-        continue;
-      }
-
-      // Block itself overflows — split word by word preserving <br>
+      // El bloque es más largo que una hoja: repartirlo en varias, palabra por
+      // palabra, preservando los <br>.
       const tag   = /^H[1-6]$/.test(block.tagName) ? block.tagName.toLowerCase() : 'p';
       const BR_TOKEN = '||BR||';
       const words = block.innerHTML
@@ -188,7 +185,7 @@
           measurer.innerHTML = `<${tag}>${joinChunk(chunk)}</${tag}>`;
         }
       }
-      current = chunk.length ? `<${tag}>${joinChunk(chunk)}</${tag}>` : '';
+      if (chunk.length) flush(`<${tag}>${joinChunk(chunk)}</${tag}>`);
     }
 
     flush();
